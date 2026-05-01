@@ -45,17 +45,32 @@ export function AuthProvider({ children }) {
     setUser(u)
   }
 
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+  // Retry once on network errors (Render free tier cold-start drops connections)
+  const postWithRetry = async (url, body) => {
+    try {
+      return await client.post(url, body)
+    } catch (e) {
+      if (!e.response) {
+        await sleep(3000)
+        return await client.post(url, body)
+      }
+      throw e
+    }
+  }
+
   const apiError = (e, fallback) =>
-    e.response?.data?.error || (e.code === 'ERR_NETWORK' || !e.response ? 'Server is waking up — please try again in a moment' : fallback)
+    e.response?.data?.error || fallback
 
   const login = async (email, password) => {
     setLoading(true)
     try {
-      const { data } = await client.post('/auth/login', { email, password })
+      const { data } = await postWithRetry('/auth/login', { email, password })
       saveSession(data.token, { name: data.user.name, email: data.user.email })
       return { ok: true }
     } catch (e) {
-      return { ok: false, error: apiError(e, 'Login failed') }
+      return { ok: false, error: apiError(e, 'Unable to reach server. Please try again.') }
     } finally {
       setLoading(false)
     }
@@ -64,10 +79,10 @@ export function AuthProvider({ children }) {
   const signup = async (name, email, password) => {
     setLoading(true)
     try {
-      await client.post('/auth/signup', { name, email, password })
+      await postWithRetry('/auth/signup', { name, email, password })
       return { ok: true }
     } catch (e) {
-      return { ok: false, error: apiError(e, 'Sign up failed') }
+      return { ok: false, error: apiError(e, 'Unable to reach server. Please try again.') }
     } finally {
       setLoading(false)
     }
