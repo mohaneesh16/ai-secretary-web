@@ -45,6 +45,9 @@ export function AuthProvider({ children }) {
     setUser(u)
   }
 
+  const apiError = (e, fallback) =>
+    e.response?.data?.error || (e.code === 'ERR_NETWORK' || !e.response ? 'Server is waking up — please try again in a moment' : fallback)
+
   const login = async (email, password) => {
     setLoading(true)
     try {
@@ -52,7 +55,7 @@ export function AuthProvider({ children }) {
       saveSession(data.token, { name: data.user.name, email: data.user.email })
       return { ok: true }
     } catch (e) {
-      return { ok: false, error: e.response?.data?.error || 'Login failed' }
+      return { ok: false, error: apiError(e, 'Login failed') }
     } finally {
       setLoading(false)
     }
@@ -64,7 +67,7 @@ export function AuthProvider({ children }) {
       await client.post('/auth/signup', { name, email, password })
       return { ok: true }
     } catch (e) {
-      return { ok: false, error: e.response?.data?.error || 'Sign up failed' }
+      return { ok: false, error: apiError(e, 'Sign up failed') }
     } finally {
       setLoading(false)
     }
