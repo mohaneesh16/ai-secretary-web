@@ -16,6 +16,10 @@ client.interceptors.request.use((config) => {
 // Only redirect to login if the token is truly gone/expired on a user-initiated page load.
 // Never redirect from background syncs (import-google, profile, status checks, etc.)
 const SILENT_URLS = [
+  '/auth/login',
+  '/auth/signup',
+  '/auth/forgot-password',
+  '/auth/reset-password',
   '/auth/profile',
   '/auth/google/status',
   '/contacts/import-google',
