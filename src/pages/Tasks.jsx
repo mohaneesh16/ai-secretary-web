@@ -1,0 +1,184 @@
+import { useEffect, useState } from 'react'
+import { Plus, Trash2, Pencil, CheckCircle2, Circle, AlertCircle } from 'lucide-react'
+import client from '../api/client'
+
+const PRIORITIES = ['low', 'medium', 'high']
+
+function TaskModal({ task, onClose, onSave }) {
+  const isEdit = !!task?.id
+  const [form, setForm] = useState({
+    title:       task?.title       || '',
+    description: task?.description || '',
+    priority:    task?.priority    || 'medium',
+    deadline:    task?.deadline    ? task.deadline.slice(0, 10) : '',
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
+
+  const submit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+    try {
+      const payload = { ...form, deadline: form.deadline || null }
+      if (isEdit) {
+        await client.put(`/tasks/${task.id}`, payload)
+      } else {
+        await client.post('/tasks', payload)
+      }
+      onSave()
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to save task')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="card w-full max-w-md p-6">
+        <h2 className="text-lg font-semibold mb-4">{isEdit ? 'Edit Task' : 'New Task'}</h2>
+        <form onSubmit={submit} className="space-y-3">
+          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>}
+          <div>
+            <label className="label">Title *</label>
+            <input className="input" value={form.title} onChange={set('title')} required />
+          </div>
+          <div>
+            <label className="label">Description</label>
+            <textarea className="input resize-none" rows={3} value={form.description} onChange={set('description')} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="label">Priority</label>
+              <select className="input" value={form.priority} onChange={set('priority')}>
+                {PRIORITIES.map((p) => <option key={p}>{p}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="label">Deadline</label>
+              <input className="input" type="date" value={form.deadline} onChange={set('deadline')} />
+            </div>
+          </div>
+          <div className="flex gap-2 pt-2">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1">Cancel</button>
+            <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Saving…' : 'Save'}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function TaskCard({ task, onToggle, onEdit, onDelete }) {
+  const priorityColor = { low: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400', medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' }
+  const isOverdue = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'completed'
+
+  return (
+    <div className={`card p-4 flex items-start gap-3 ${task.status === 'completed' ? 'opacity-60' : ''}`}>
+      <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 text-primary-600">
+        {task.status === 'completed' ? <CheckCircle2 size={20} /> : <Circle size={20} />}
+      </button>
+      <div className="flex-1 min-w-0">
+        <p className={`font-medium text-sm ${task.status === 'completed' ? 'line-through text-gray-400' : ''}`}>{task.title}</p>
+        {task.description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">{task.description}</p>}
+        <div className="flex items-center gap-2 mt-2 flex-wrap">
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityColor[task.priority] || priorityColor.medium}`}>{task.priority}</span>
+          {task.deadline && (
+            <span className={`text-xs flex items-center gap-1 ${isOverdue ? 'text-red-500' : 'text-gray-400'}`}>
+              {isOverdue && <AlertCircle size={12} />}
+              {new Date(task.deadline).toLocaleDateString()}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="flex gap-1 shrink-0">
+        {task.status !== 'completed' && (
+          <button onClick={() => onEdit(task)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400">
+            <Pencil size={15} />
+          </button>
+        )}
+        <button onClick={() => onDelete(task.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-400 hover:text-red-500">
+          <Trash2 size={15} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function Tasks() {
+  const [tasks, setTasks]     = useState([])
+  const [loading, setLoading] = useState(true)
+  const [modal, setModal]     = useState(null)
+  const [filter, setFilter]   = useState('all')
+
+  const load = async () => {
+    try {
+      const { data } = await client.get('/tasks')
+      setTasks(data.tasks || [])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => { load() }, [])
+
+  const toggle = async (task) => {
+    const newStatus = task.status === 'completed' ? 'pending' : 'completed'
+    await client.put(`/tasks/${task.id}`, { ...task, status: newStatus })
+    load()
+  }
+
+  const del = async (id) => {
+    if (!confirm('Delete this task?')) return
+    await client.delete(`/tasks/${id}`)
+    load()
+  }
+
+  const filtered = tasks.filter((t) => {
+    if (filter === 'pending')   return t.status !== 'completed'
+    if (filter === 'completed') return t.status === 'completed'
+    return true
+  })
+
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Tasks</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{tasks.filter((t) => t.status !== 'completed').length} pending</p>
+        </div>
+        <button onClick={() => setModal({})} className="btn-primary flex items-center gap-2">
+          <Plus size={16} /> New Task
+        </button>
+      </div>
+
+      <div className="flex gap-2">
+        {['all', 'pending', 'completed'].map((f) => (
+          <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors ${filter === f ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+            {f}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="space-y-3">{[1,2,3].map((i) => <div key={i} className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />)}</div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">
+          <CheckCircle2 size={40} className="mx-auto mb-3 opacity-30" />
+          <p>No tasks here</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((t) => <TaskCard key={t.id} task={t} onToggle={toggle} onEdit={(t) => setModal(t)} onDelete={del} />)}
+        </div>
+      )}
+
+      {modal !== null && (
+        <TaskModal task={modal} onClose={() => setModal(null)} onSave={() => { setModal(null); load() }} />
+      )}
+    </div>
+  )
+}
