@@ -37,7 +37,7 @@ function TaskModal({ task, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">{isEdit ? 'Edit Task' : 'New Task'}</h2>
         <form onSubmit={submit} className="space-y-3">
@@ -73,7 +73,11 @@ function TaskModal({ task, onClose, onSave }) {
 }
 
 function TaskCard({ task, onToggle, onEdit, onDelete }) {
-  const priorityColor = { low: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400', medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' }
+  const priorityColor = {
+    low:    'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500',
+    medium: 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
+    high:   'bg-gray-900 text-white dark:bg-white dark:text-gray-900',
+  }
   const isOverdue = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'completed'
 
   return (
@@ -147,7 +151,7 @@ export default function Tasks() {
     <div className="space-y-4 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Tasks</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Tasks</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">{tasks.filter((t) => t.status !== 'completed').length} pending</p>
         </div>
         <button onClick={() => setModal({})} className="btn-primary flex items-center gap-2">
@@ -157,7 +161,12 @@ export default function Tasks() {
 
       <div className="flex gap-2">
         {['all', 'pending', 'completed'].map((f) => (
-          <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors ${filter === f ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+          <button key={f} onClick={() => setFilter(f)}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-all duration-150 ${
+              filter === f
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+                : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/40 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}>
             {f}
           </button>
         ))}

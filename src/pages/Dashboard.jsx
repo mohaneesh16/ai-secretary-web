@@ -3,16 +3,16 @@ import { CheckSquare, Users, Mail, Calendar, Bot, Clock, AlertCircle } from 'luc
 import client from '../api/client'
 import { useAuth } from '../context/AuthContext'
 
-function StatCard({ icon: Icon, label, value, color }) {
+function StatCard({ icon: Icon, label, value }) {
   return (
-    <div className="card p-5 flex items-center gap-4">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
-        <Icon size={22} className="text-white" />
+    <div className="card p-5">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 tracking-tight">{label}</p>
+        <div className="w-8 h-8 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+          <Icon size={15} className="text-gray-500 dark:text-gray-400" />
+        </div>
       </div>
-      <div>
-        <p className="text-2xl font-bold">{value ?? '—'}</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-      </div>
+      <p className="text-2xl font-bold tracking-tight">{value ?? '—'}</p>
     </div>
   )
 }
@@ -67,15 +67,15 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{greeting}, {user?.name?.split(' ')[0]} 👋</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{greeting}, {user?.name?.split(' ')[0]}</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Here's your daily overview</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard icon={CheckSquare} label="Pending Tasks" value={stats.tasks}    color="bg-gray-800 dark:bg-gray-700" />
-        <StatCard icon={Users}       label="Contacts"      value={stats.contacts} color="bg-gray-700 dark:bg-gray-600" />
-        <StatCard icon={Mail}        label="Email"         value="Gmail"          color="bg-gray-600 dark:bg-gray-500" />
-        <StatCard icon={Calendar}    label="Today"         value={todayEvents.length || 'Free'} color="bg-gray-500 dark:bg-gray-400" />
+        <StatCard icon={CheckSquare} label="Pending Tasks" value={stats.tasks} />
+        <StatCard icon={Users}       label="Contacts"      value={stats.contacts} />
+        <StatCard icon={Mail}        label="Email"         value="Gmail" />
+        <StatCard icon={Calendar}    label="Today"         value={todayEvents.length || 'Free'} />
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">

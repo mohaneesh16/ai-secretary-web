@@ -275,7 +275,7 @@ export default function CalendarPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Calendar</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">{listLabel}</p>
         </div>
         <div className="flex gap-2">

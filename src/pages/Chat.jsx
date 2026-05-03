@@ -63,7 +63,7 @@ export default function Chat() {
     <div className="flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-3rem)]">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-bold">Chat</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Chat</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">AI-powered assistant</p>
         </div>
         {messages.length > 0 && (

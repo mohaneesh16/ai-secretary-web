@@ -28,13 +28,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
-      <div className="card w-full max-w-sm p-8">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#f2f2f7] dark:bg-[#0a0a0a]">
+      <div className="card w-full max-w-sm p-8 shadow-modal">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-primary-600 flex items-center justify-center mb-4">
-            <Bot size={28} className="text-white" />
+          <div className="w-16 h-16 rounded-3xl bg-gray-900 dark:bg-white flex items-center justify-center mb-5 shadow-sm">
+            <Bot size={28} className="text-white dark:text-gray-900" />
           </div>
-          <h1 className="text-2xl font-bold">Create Account</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Get started with AI Secretary</p>
         </div>
 

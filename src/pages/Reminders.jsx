@@ -33,7 +33,7 @@ function ReminderModal({ reminder, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">{isEdit ? 'Edit Reminder' : 'New Reminder'}</h2>
         <form onSubmit={submit} className="space-y-3">
@@ -161,7 +161,7 @@ export default function Reminders() {
     <div className="space-y-4 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Reminders</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Reminders</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {todayCount > 0 && <span className="text-primary-600 font-medium">{todayCount} today</span>}
             {todayCount > 0 && overdueCount > 0 && ' · '}
@@ -182,7 +182,7 @@ export default function Reminders() {
           { key: 'done',     label: 'Done' },
         ].map(({ key, label }) => (
           <button key={key} onClick={() => setFilter(key)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filter === key ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-150 ${filter === key ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/40 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
             {label}
           </button>
         ))}

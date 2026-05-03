@@ -67,7 +67,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
 
       {/* Profile */}
       <div className="card overflow-hidden">
@@ -229,7 +229,7 @@ export default function SettingsPage() {
       </button>
 
       {showLogout && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="card w-full max-w-sm p-6 text-center">
             <div className="w-14 h-14 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center mx-auto mb-4">
               <LogOut size={24} className="text-red-500" />

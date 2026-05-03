@@ -33,7 +33,7 @@ function ContactModal({ contact, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">{isEdit ? 'Edit Contact' : 'New Contact'}</h2>
         <form onSubmit={submit} className="space-y-3">
@@ -82,7 +82,7 @@ function ContactModal({ contact, onClose, onSave }) {
 
 function ContactDetail({ contact, onClose, onEdit, onDelete }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="card w-full max-w-md p-6">
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-4">
@@ -192,7 +192,7 @@ export default function Contacts() {
     <div className="space-y-4 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Contacts</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Contacts</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {contacts.length} total{vip.length > 0 && ` · ${vip.length} VIP`}
           </p>
@@ -214,7 +214,7 @@ export default function Contacts() {
         {vip.length > 0 && (
           <button
             onClick={() => setVipOnly(!vipOnly)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${vipOnly ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-150 ${vipOnly ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/40'}`}
           >
             <Star size={14} /> VIP
           </button>

@@ -24,7 +24,7 @@ function ComposeModal({ onClose, onSent, contacts }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="card w-full max-w-lg p-6">
         <h2 className="text-lg font-semibold mb-4">Compose Email</h2>
         <form onSubmit={submit} className="space-y-3">
@@ -211,7 +211,7 @@ export default function Email() {
     <div className="space-y-4 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Email</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Email</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">{emails.length} messages</p>
         </div>
         <div className="flex gap-2">
