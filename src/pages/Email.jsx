@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Mail, Send, RefreshCw, ChevronDown, ChevronUp, Inbox } from 'lucide-react'
+import { Mail, Send, RefreshCw, ChevronDown, ChevronUp, Inbox, Sparkles } from 'lucide-react'
 import client from '../api/client'
 
 function ComposeModal({ onClose, onSent, contacts }) {
@@ -55,15 +55,54 @@ function ComposeModal({ onClose, onSent, contacts }) {
 }
 
 function EmailCard({ email }) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded]   = useState(false)
+  const [draft, setDraft]         = useState('')
+  const [drafting, setDrafting]   = useState(false)
+  const [sending, setSending]     = useState(false)
+  const [sent, setSent]           = useState(false)
+  const [replyError, setReplyError] = useState('')
+
   const from    = email.from_name || email.from_email || email.from || ''
   const date    = email.received_at || email.date
   const isRead  = email.is_read ?? email.read ?? true
   const summary = email.ai_summary || email.body || email.snippet || ''
   const urgency = email.urgency
 
+  const generateReply = async () => {
+    setDrafting(true)
+    setReplyError('')
+    setDraft('')
+    try {
+      const { data } = await client.post('/email/draft-reply', { emailId: email.id })
+      setDraft(data.draft || data.body || '')
+    } catch (err) {
+      setReplyError(err.response?.data?.error || 'Failed to generate reply')
+    } finally {
+      setDrafting(false)
+    }
+  }
+
+  const sendReply = async () => {
+    if (!draft.trim()) return
+    setSending(true)
+    setReplyError('')
+    try {
+      await client.post('/email/send', {
+        to: email.from_email || email.from || '',
+        subject: `Re: ${email.subject || ''}`,
+        body: draft,
+      })
+      setSent(true)
+      setDraft('')
+    } catch (err) {
+      setReplyError(err.response?.data?.error || 'Failed to send reply')
+    } finally {
+      setSending(false)
+    }
+  }
+
   return (
-    <div className={`card p-4 ${urgency === 'urgent' ? 'border-l-2 border-red-400' : ''}`}>
+    <div className={`card p-4 ${urgency === 'urgent' ? 'border-l-2 border-gray-800 dark:border-gray-300' : ''}`}>
       <button onClick={() => setExpanded(!expanded)} className="w-full text-left">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
@@ -72,15 +111,50 @@ function EmailCard({ email }) {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {date && <span className="text-xs text-gray-400">{new Date(date).toLocaleDateString('en-IN')}</span>}
-            {urgency === 'urgent' && <span className="text-xs text-red-500 font-medium">Urgent</span>}
-            {!isRead && <span className="w-2 h-2 rounded-full bg-primary-600" />}
+            {urgency === 'urgent' && <span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">Urgent</span>}
+            {!isRead && <span className="w-2 h-2 rounded-full bg-gray-900 dark:bg-gray-100" />}
             {expanded ? <ChevronUp size={15} className="text-gray-400" /> : <ChevronDown size={15} className="text-gray-400" />}
           </div>
         </div>
       </button>
+
       {expanded && (
-        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300">
-          {summary || <span className="italic text-gray-400">No summary available</span>}
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 space-y-3">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            {summary || <span className="italic text-gray-400">No summary available</span>}
+          </p>
+
+          {sent ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400">Reply sent.</p>
+          ) : draft ? (
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Draft Reply</label>
+              <textarea
+                className="input resize-none text-sm"
+                rows={5}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+              />
+              {replyError && <p className="text-xs text-red-500">{replyError}</p>}
+              <div className="flex gap-2">
+                <button onClick={() => setDraft('')} className="btn-secondary text-sm py-1.5 flex-1">Discard</button>
+                <button onClick={sendReply} disabled={sending} className="btn-primary text-sm py-1.5 flex-1 flex items-center justify-center gap-1.5">
+                  <Send size={13} /> {sending ? 'Sending…' : 'Send Reply'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              {replyError && <p className="text-xs text-red-500 mb-2">{replyError}</p>}
+              <button
+                onClick={generateReply}
+                disabled={drafting}
+                className="btn-secondary text-sm py-1.5 flex items-center gap-1.5"
+              >
+                <Sparkles size={13} /> {drafting ? 'Generating…' : 'AI Reply'}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

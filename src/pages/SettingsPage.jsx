@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Sun, Moon, Monitor, LogOut, CheckCircle2, ExternalLink, ChevronRight, RefreshCw } from 'lucide-react'
+import { Sun, Moon, Monitor, LogOut, CheckCircle2, ExternalLink, ChevronRight, RefreshCw, Save } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +12,12 @@ export default function SettingsPage() {
   const [showLogout, setShowLogout] = useState(false)
   const [googleConnected, setGoogleConnected] = useState(user?.google_connected || false)
   const [checking, setChecking] = useState(false)
+
+  // Profile form state
+  const [profile, setProfile]       = useState({ name: user?.name || '', briefing_time: '06:55', language: 'english', mode: 'professional' })
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [profileSaved, setProfileSaved]   = useState(false)
+  const [profileError, setProfileError]   = useState('')
 
   const token = localStorage.getItem('token')
   const googleConnectUrl = `${import.meta.env.VITE_API_URL || 'https://pers-ruxy.onrender.com'}/auth/google?token=${token}`
@@ -29,8 +35,33 @@ export default function SettingsPage() {
     checkGoogleStatus()
     const onFocus = () => checkGoogleStatus()
     window.addEventListener('focus', onFocus)
+    // Load current profile settings
+    client.get('/auth/profile').then(({ data }) => {
+      const u = data.user
+      setProfile({
+        name:          u.name          || user?.name || '',
+        briefing_time: u.briefing_time || '06:55',
+        language:      u.language      || 'english',
+        mode:          u.mode          || 'professional',
+      })
+    }).catch(() => {})
     return () => window.removeEventListener('focus', onFocus)
   }, [])
+
+  const saveProfile = async () => {
+    setSavingProfile(true)
+    setProfileError('')
+    setProfileSaved(false)
+    try {
+      await client.put('/auth/profile', profile)
+      setProfileSaved(true)
+      setTimeout(() => setProfileSaved(false), 2000)
+    } catch (err) {
+      setProfileError(err.response?.data?.error || 'Failed to save')
+    } finally {
+      setSavingProfile(false)
+    }
+  }
 
   const handleLogout = () => { logout(); navigate('/login') }
 
@@ -49,6 +80,44 @@ export default function SettingsPage() {
           </div>
           <p className="text-xl font-bold">{user?.name}</p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{user?.email}</p>
+        </div>
+      </div>
+
+      {/* Profile Settings */}
+      <div className="card p-5">
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-4">Profile</p>
+        <div className="space-y-3">
+          <div>
+            <label className="label">Display Name</label>
+            <input className="input" value={profile.name} onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="label">Briefing Time</label>
+              <input className="input" type="time" value={profile.briefing_time} onChange={(e) => setProfile((p) => ({ ...p, briefing_time: e.target.value }))} />
+            </div>
+            <div>
+              <label className="label">Language</label>
+              <select className="input" value={profile.language} onChange={(e) => setProfile((p) => ({ ...p, language: e.target.value }))}>
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+                <option value="tamil">Tamil</option>
+                <option value="telugu">Telugu</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="label">AI Mode</label>
+            <select className="input" value={profile.mode} onChange={(e) => setProfile((p) => ({ ...p, mode: e.target.value }))}>
+              <option value="professional">Professional</option>
+              <option value="casual">Casual</option>
+              <option value="concise">Concise</option>
+            </select>
+          </div>
+          {profileError && <p className="text-sm text-red-500">{profileError}</p>}
+          <button onClick={saveProfile} disabled={savingProfile} className="btn-primary flex items-center gap-2">
+            <Save size={15} /> {savingProfile ? 'Saving…' : profileSaved ? 'Saved ✓' : 'Save Changes'}
+          </button>
         </div>
       </div>
 

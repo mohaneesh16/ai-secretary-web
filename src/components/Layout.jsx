@@ -1,10 +1,11 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, CheckSquare, Users, MessageSquare,
-  Mail, Calendar, Settings, LogOut, Bot, Menu, X, Bell
+  Mail, Calendar, Settings, LogOut, Bot, Menu, Bell, Search, X
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
+import client from '../api/client'
 
 const NAV = [
   { to: '/dashboard',  label: 'Dashboard', icon: LayoutDashboard },
@@ -16,6 +17,91 @@ const NAV = [
   { to: '/calendar',   label: 'Calendar',  icon: Calendar },
   { to: '/settings',   label: 'Settings',  icon: Settings },
 ]
+
+function GlobalSearch() {
+  const [query, setQuery]     = useState('')
+  const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [focused, setFocused] = useState(false)
+  const ref = useRef(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const down = (e) => { if (e.key === 'Escape') { setQuery(''); setResults(null) } }
+    document.addEventListener('keydown', down)
+    return () => document.removeEventListener('keydown', down)
+  }, [])
+
+  useEffect(() => {
+    if (!query.trim()) { setResults(null); return }
+    const id = setTimeout(async () => {
+      setLoading(true)
+      try {
+        const [contacts, tasks] = await Promise.allSettled([
+          client.get('/contacts'),
+          client.get('/tasks'),
+        ])
+        const q = query.toLowerCase()
+        const matchedContacts = (contacts.value?.data?.contacts || [])
+          .filter(c => c.name?.toLowerCase().includes(q) || c.email?.toLowerCase().includes(q) || c.company?.toLowerCase().includes(q))
+          .slice(0, 4)
+        const matchedTasks = (tasks.value?.data?.tasks || [])
+          .filter(t => t.title?.toLowerCase().includes(q))
+          .slice(0, 4)
+        setResults({ contacts: matchedContacts, tasks: matchedTasks })
+      } finally { setLoading(false) }
+    }, 300)
+    return () => clearTimeout(id)
+  }, [query])
+
+  const go = (path) => { navigate(path); setQuery(''); setResults(null) }
+  const total = (results?.contacts?.length || 0) + (results?.tasks?.length || 0)
+
+  return (
+    <div className="relative" ref={ref}>
+      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-colors ${focused ? 'border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-900' : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'}`}>
+        <Search size={14} className="text-gray-400 shrink-0" />
+        <input
+          type="text"
+          placeholder="Search tasks, contacts…"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setTimeout(() => setFocused(false), 150)}
+          className="bg-transparent text-sm outline-none w-48 placeholder-gray-400"
+        />
+        {query && <button onClick={() => { setQuery(''); setResults(null) }}><X size={12} className="text-gray-400" /></button>}
+      </div>
+
+      {query && focused && (
+        <div className="absolute top-full mt-1 left-0 w-72 card shadow-lg z-50 overflow-hidden">
+          {loading && <p className="text-xs text-gray-400 px-3 py-2">Searching…</p>}
+          {!loading && results && total === 0 && <p className="text-xs text-gray-400 px-3 py-3">No results for "{query}"</p>}
+          {!loading && results?.tasks?.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase px-3 pt-2 pb-1">Tasks</p>
+              {results.tasks.map(t => (
+                <button key={t.id} onClick={() => go('/tasks')} className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm truncate">
+                  {t.title}
+                </button>
+              ))}
+            </div>
+          )}
+          {!loading && results?.contacts?.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase px-3 pt-2 pb-1">Contacts</p>
+              {results.contacts.map(c => (
+                <button key={c.id} onClick={() => go('/contacts')} className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm truncate">
+                  {c.name} {c.email && <span className="text-gray-400 text-xs">· {c.email}</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Layout() {
   const { user, logout } = useAuth()
@@ -43,9 +129,12 @@ export default function Layout() {
 
   const Sidebar = () => (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 px-4 py-5 border-b border-gray-200 dark:border-gray-700">
-        <Bot size={24} className="text-primary-600" />
-        <span className="font-bold text-lg">AI Secretary</span>
+      <div className="flex items-center gap-2 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+        <Bot size={22} className="text-primary-600 shrink-0" />
+        <span className="font-bold text-base">AI Secretary</span>
+      </div>
+      <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800">
+        <GlobalSearch />
       </div>
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {NAV.map((item) => <NavItem key={item.to} {...item} />)}
