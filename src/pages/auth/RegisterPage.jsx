@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#f2f2f7] dark:bg-[#0a0a0a]">
-      <div className="card w-full max-w-sm p-8 shadow-modal">
+      <div className="card w-full max-w-sm p-8 shadow-[0_24px_64px_-12px_rgba(0,0,0,0.18)]">
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 rounded-3xl bg-gray-900 dark:bg-white flex items-center justify-center mb-5 shadow-sm">
             <Bot size={28} className="text-white dark:text-gray-900" />
@@ -69,7 +69,7 @@ export default function RegisterPage() {
 
         <p className="text-sm text-center text-gray-500 mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-primary-600 font-medium hover:underline">Sign in</Link>
+          <Link to="/login" className="text-gray-900 dark:text-white font-semibold hover:underline">Sign in</Link>
         </p>
       </div>
     </div>

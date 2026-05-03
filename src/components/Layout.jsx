@@ -82,7 +82,7 @@ function GlobalSearch() {
       </div>
 
       {query && focused && (
-        <div className="absolute top-full mt-2 left-0 right-0 card shadow-modal z-50 overflow-hidden py-1">
+        <div className="absolute top-full mt-2 left-0 right-0 card shadow-[0_24px_64px_-12px_rgba(0,0,0,0.18)] z-50 overflow-hidden py-1">
           {loading && <p className="text-xs text-gray-400 px-3 py-2.5">Searching…</p>}
           {!loading && results && total === 0 && (
             <p className="text-xs text-gray-400 px-3 py-3">No results for "{query}"</p>

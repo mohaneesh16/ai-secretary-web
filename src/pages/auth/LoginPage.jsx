@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#f2f2f7] dark:bg-[#0a0a0a]">
-      <div className="card w-full max-w-sm p-8 shadow-modal">
+      <div className="card w-full max-w-sm p-8 shadow-[0_24px_64px_-12px_rgba(0,0,0,0.18)]">
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 rounded-3xl bg-gray-900 dark:bg-white flex items-center justify-center mb-5 shadow-sm">
             <Bot size={28} className="text-white dark:text-gray-900" />
@@ -47,7 +47,7 @@ export default function LoginPage() {
             </div>
           </div>
           <div className="text-right">
-            <Link to="/forgot-password" className="text-sm text-primary-600 hover:underline">Forgot password?</Link>
+            <Link to="/forgot-password" className="text-sm text-gray-900 dark:text-white hover:underline">Forgot password?</Link>
           </div>
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? 'Signing in…' : 'Sign In'}
@@ -56,7 +56,7 @@ export default function LoginPage() {
 
         <p className="text-sm text-center text-gray-500 mt-6">
           Don't have an account?{' '}
-          <Link to="/register" className="text-primary-600 font-medium hover:underline">Create one</Link>
+          <Link to="/register" className="text-gray-900 dark:text-white font-semibold hover:underline">Create one</Link>
         </p>
       </div>
     </div>
