@@ -59,29 +59,40 @@ function GlobalSearch() {
 
   return (
     <div className="relative" ref={ref}>
-      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-colors ${focused ? 'border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-900' : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'}`}>
-        <Search size={14} className="text-gray-400 shrink-0" />
+      <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-200 ${
+        focused
+          ? 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-sm'
+          : 'border-gray-200/60 dark:border-gray-700/40 bg-gray-100/60 dark:bg-gray-800/40'
+      }`}>
+        <Search size={13} className="text-gray-400 shrink-0" />
         <input
           type="text"
-          placeholder="Search tasks, contacts…"
+          placeholder="Search…"
           value={query}
           onChange={e => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
-          className="bg-transparent text-sm outline-none w-48 placeholder-gray-400"
+          className="bg-transparent text-xs outline-none w-full placeholder-gray-400 dark:placeholder-gray-500 text-gray-800 dark:text-gray-200"
         />
-        {query && <button onClick={() => { setQuery(''); setResults(null) }}><X size={12} className="text-gray-400" /></button>}
+        {query && (
+          <button onClick={() => { setQuery(''); setResults(null) }} className="shrink-0">
+            <X size={11} className="text-gray-400" />
+          </button>
+        )}
       </div>
 
       {query && focused && (
-        <div className="absolute top-full mt-1 left-0 w-72 card shadow-lg z-50 overflow-hidden">
-          {loading && <p className="text-xs text-gray-400 px-3 py-2">Searching…</p>}
-          {!loading && results && total === 0 && <p className="text-xs text-gray-400 px-3 py-3">No results for "{query}"</p>}
+        <div className="absolute top-full mt-2 left-0 right-0 card shadow-modal z-50 overflow-hidden py-1">
+          {loading && <p className="text-xs text-gray-400 px-3 py-2.5">Searching…</p>}
+          {!loading && results && total === 0 && (
+            <p className="text-xs text-gray-400 px-3 py-3">No results for "{query}"</p>
+          )}
           {!loading && results?.tasks?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase px-3 pt-2 pb-1">Tasks</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 pt-2.5 pb-1">Tasks</p>
               {results.tasks.map(t => (
-                <button key={t.id} onClick={() => go('/tasks')} className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm truncate">
+                <button key={t.id} onClick={() => go('/tasks')}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs text-gray-700 dark:text-gray-300 truncate transition-colors">
                   {t.title}
                 </button>
               ))}
@@ -89,10 +100,11 @@ function GlobalSearch() {
           )}
           {!loading && results?.contacts?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase px-3 pt-2 pb-1">Contacts</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 pt-2.5 pb-1">Contacts</p>
               {results.contacts.map(c => (
-                <button key={c.id} onClick={() => go('/contacts')} className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm truncate">
-                  {c.name} {c.email && <span className="text-gray-400 text-xs">· {c.email}</span>}
+                <button key={c.id} onClick={() => go('/contacts')}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 text-xs text-gray-700 dark:text-gray-300 truncate transition-colors">
+                  {c.name}{c.email && <span className="text-gray-400"> · {c.email}</span>}
                 </button>
               ))}
             </div>
@@ -115,60 +127,72 @@ export default function Layout() {
       to={to}
       onClick={() => setOpen(false)}
       className={({ isActive }) =>
-        `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+        `flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
           isActive
-            ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300'
-            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
+            ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+            : 'text-gray-500 dark:text-gray-400 hover:bg-white/80 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-gray-100'
         }`
       }
     >
-      <Icon size={18} />
-      {label}
+      <Icon size={16} className="shrink-0" />
+      <span className="tracking-tight">{label}</span>
     </NavLink>
   )
 
   const Sidebar = () => (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-        <Bot size={22} className="text-primary-600 shrink-0" />
-        <span className="font-bold text-base">AI Secretary</span>
+      {/* Logo */}
+      <div className="flex items-center gap-2.5 px-4 py-5">
+        <div className="w-8 h-8 rounded-xl bg-gray-900 dark:bg-white flex items-center justify-center shadow-sm shrink-0">
+          <Bot size={16} className="text-white dark:text-gray-900" />
+        </div>
+        <span className="font-bold text-sm tracking-tight">AI Secretary</span>
       </div>
-      <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800">
+
+      {/* Search */}
+      <div className="px-3 pb-3">
         <GlobalSearch />
       </div>
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+
+      {/* Nav */}
+      <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
         {NAV.map((item) => <NavItem key={item.to} {...item} />)}
       </nav>
-      <div className="p-3 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-2 px-3 py-2 mb-1">
-          <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-sm font-bold">
+
+      {/* User */}
+      <div className="p-3 mt-auto">
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gray-50/80 dark:bg-gray-800/50 border border-gray-200/40 dark:border-gray-700/30">
+          <div className="w-7 h-7 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-gray-900 text-xs font-bold shrink-0">
             {user?.name?.[0]?.toUpperCase() ?? '?'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{user?.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+            <p className="text-xs font-semibold tracking-tight truncate">{user?.name}</p>
+            <p className="text-[10px] text-gray-400 truncate">{user?.email}</p>
           </div>
+          <button
+            onClick={handleLogout}
+            className="p-1.5 rounded-lg hover:bg-gray-200/60 dark:hover:bg-gray-700/60 text-gray-400 hover:text-red-500 transition-colors"
+            title="Sign out"
+          >
+            <LogOut size={13} />
+          </button>
         </div>
-        <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors">
-          <LogOut size={18} />
-          Sign Out
-        </button>
       </div>
     </div>
   )
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+      {/* Desktop sidebar — frosted glass */}
+      <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-gray-200/50 dark:border-gray-800/50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-2xl">
         <Sidebar />
       </aside>
 
       {/* Mobile overlay */}
       {open && (
         <div className="fixed inset-0 z-40 flex md:hidden">
-          <div className="fixed inset-0 bg-black/50" onClick={() => setOpen(false)} />
-          <aside className="relative z-50 flex flex-col w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700">
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <aside className="relative z-50 flex flex-col w-64 bg-white/90 dark:bg-gray-950/90 backdrop-blur-2xl border-r border-gray-200/50 dark:border-gray-800/50">
             <Sidebar />
           </aside>
         </div>
@@ -177,16 +201,19 @@ export default function Layout() {
       {/* Main */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* Mobile top bar */}
-        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-          <button onClick={() => setOpen(true)} className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
-            <Menu size={20} />
+        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-gray-200/50 dark:border-gray-800/50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-2xl">
+          <button onClick={() => setOpen(true)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <Menu size={18} />
           </button>
           <div className="flex items-center gap-2">
-            <Bot size={20} className="text-primary-600" />
-            <span className="font-bold">AI Secretary</span>
+            <div className="w-6 h-6 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center">
+              <Bot size={13} className="text-white dark:text-gray-900" />
+            </div>
+            <span className="font-bold text-sm tracking-tight">AI Secretary</span>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+
+        <main className="flex-1 overflow-y-auto p-5 md:p-8">
           <div className="max-w-4xl mx-auto w-full">
             <Outlet />
           </div>

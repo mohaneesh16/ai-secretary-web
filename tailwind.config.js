@@ -4,6 +4,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+      },
       colors: {
         primary: {
           50:  '#f5f5f5',
@@ -17,6 +20,21 @@ export default {
           800: '#080808',
           900: '#000000',
         },
+      },
+      boxShadow: {
+        'card':       '0 1px 2px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04)',
+        'card-hover': '0 4px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)',
+        'modal':      '0 24px 64px -12px rgba(0,0,0,0.18)',
+        'nav':        '0 2px 8px rgba(0,0,0,0.08)',
+      },
+      borderRadius: {
+        '2xl':  '16px',
+        '3xl':  '20px',
+        '4xl':  '28px',
+      },
+      letterSpacing: {
+        tighter: '-0.03em',
+        tight:   '-0.02em',
       },
     },
   },
