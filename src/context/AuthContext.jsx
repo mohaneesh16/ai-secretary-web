@@ -27,6 +27,7 @@ export function AuthProvider({ children }) {
   const [user, setUser]       = useState(safeParseUser)
   const [token, setToken]     = useState(safeGetToken)
   const [loading, setLoading] = useState(false)
+  const [loginHint, setLoginHint] = useState('')
 
   useEffect(() => {
     const storedToken = safeGetToken()
@@ -47,16 +48,16 @@ export function AuthProvider({ children }) {
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-  // Retry once on network errors (Render free tier cold-start drops connections)
-  const postWithRetry = async (url, body) => {
-    try {
-      return await client.post(url, body)
-    } catch (e) {
-      if (!e.response) {
-        await sleep(3000)
+  // Retry up to 10 times on network errors — Render free tier takes ~30-50s to cold-start
+  const postWithRetry = async (url, body, onRetry) => {
+    for (let attempt = 0; attempt <= 10; attempt++) {
+      try {
         return await client.post(url, body)
+      } catch (e) {
+        if (e.response || attempt === 10) throw e
+        if (attempt === 0) onRetry?.()
+        await sleep(attempt < 3 ? 3000 : 5000)
       }
-      throw e
     }
   }
 
@@ -65,26 +66,34 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     setLoading(true)
+    setLoginHint('')
     try {
-      const { data } = await postWithRetry('/auth/login', { email, password })
+      const { data } = await postWithRetry('/auth/login', { email, password }, () =>
+        setLoginHint('Server is waking up, please wait (~30 seconds)…')
+      )
       saveSession(data.token, { name: data.user.name, email: data.user.email })
       return { ok: true }
     } catch (e) {
       return { ok: false, error: apiError(e, 'Unable to reach server. Please try again.') }
     } finally {
       setLoading(false)
+      setLoginHint('')
     }
   }
 
   const signup = async (name, email, password) => {
     setLoading(true)
+    setLoginHint('')
     try {
-      await postWithRetry('/auth/signup', { name, email, password })
+      await postWithRetry('/auth/signup', { name, email, password }, () =>
+        setLoginHint('Server is waking up, please wait (~30 seconds)…')
+      )
       return { ok: true }
     } catch (e) {
       return { ok: false, error: apiError(e, 'Unable to reach server. Please try again.') }
     } finally {
       setLoading(false)
+      setLoginHint('')
     }
   }
 
@@ -96,11 +105,11 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, loginHint, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
 // Safe fallback so destructuring never throws if context is null
-export const useAuth = () => useContext(AuthContext) ?? { user: null, token: null, loading: false, login: async () => ({}), signup: async () => ({}), logout: () => {} }
+export const useAuth = () => useContext(AuthContext) ?? { user: null, token: null, loading: false, loginHint: '', login: async () => ({}), signup: async () => ({}), logout: () => {} }

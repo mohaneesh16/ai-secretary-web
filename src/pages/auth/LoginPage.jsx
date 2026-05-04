@@ -4,7 +4,7 @@ import { Bot, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function LoginPage() {
-  const { login, loading } = useAuth()
+  const { login, loading, loginHint } = useAuth()
   const navigate = useNavigate()
   const [form, setForm]       = useState({ email: '', password: '' })
   const [showPw, setShowPw]   = useState(false)
@@ -52,6 +52,9 @@ export default function LoginPage() {
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
+          {loginHint && (
+            <p className="text-xs text-center text-gray-400 dark:text-gray-500 animate-pulse">{loginHint}</p>
+          )}
         </form>
 
         <p className="text-sm text-center text-gray-500 mt-6">
