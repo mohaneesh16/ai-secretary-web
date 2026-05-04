@@ -48,15 +48,21 @@ export function AuthProvider({ children }) {
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-  // Retry up to 10 times on network errors — Render free tier takes ~30-50s to cold-start
+  // Retry on network errors AND 502/503/504 — Render free tier cold-starts return these
+  const isRetryable = (e) => {
+    if (!e.response) return true
+    const s = e.response.status
+    return s === 502 || s === 503 || s === 504
+  }
+
   const postWithRetry = async (url, body, onRetry) => {
-    for (let attempt = 0; attempt <= 10; attempt++) {
+    for (let attempt = 0; attempt <= 12; attempt++) {
       try {
         return await client.post(url, body)
       } catch (e) {
-        if (e.response || attempt === 10) throw e
+        if (!isRetryable(e) || attempt === 12) throw e
         if (attempt === 0) onRetry?.()
-        await sleep(attempt < 3 ? 3000 : 5000)
+        await sleep(attempt < 4 ? 4000 : 6000)
       }
     }
   }

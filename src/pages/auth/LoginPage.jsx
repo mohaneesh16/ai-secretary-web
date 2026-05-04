@@ -13,8 +13,22 @@ export default function LoginPage() {
   const [serverReady, setServerReady] = useState(false)
 
   useEffect(() => {
-    // Pre-warm the backend so it's awake before the user clicks Sign In
-    client.get('/').then(() => setServerReady(true)).catch(() => setServerReady(true))
+    let cancelled = false
+    const warm = async () => {
+      for (let i = 0; i < 20; i++) {
+        try {
+          await client.get('/')
+          if (!cancelled) setServerReady(true)
+          return
+        } catch {
+          if (cancelled) return
+          await new Promise((r) => setTimeout(r, 4000))
+        }
+      }
+      if (!cancelled) setServerReady(true) // give up after ~80s
+    }
+    warm()
+    return () => { cancelled = true }
   }, [])
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
