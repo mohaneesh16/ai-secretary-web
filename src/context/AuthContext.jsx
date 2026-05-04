@@ -80,7 +80,8 @@ export function AuthProvider({ children }) {
       saveSession(data.token, { name: data.user.name, email: data.user.email })
       return { ok: true }
     } catch (e) {
-      return { ok: false, error: apiError(e, 'Unable to reach server. Please try again.') }
+      const detail = e.code || e.message || (e.response ? `HTTP ${e.response.status}` : 'no response')
+      return { ok: false, error: apiError(e, `Unable to reach server (${detail}). Please try again.`) }
     } finally {
       setLoading(false)
       setLoginHint('')
