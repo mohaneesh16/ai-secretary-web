@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Bot, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import client from '../../api/client'
 
 export default function LoginPage() {
   const { login, loading, loginHint } = useAuth()
@@ -9,6 +10,12 @@ export default function LoginPage() {
   const [form, setForm]       = useState({ email: '', password: '' })
   const [showPw, setShowPw]   = useState(false)
   const [error, setError]     = useState('')
+  const [serverReady, setServerReady] = useState(false)
+
+  useEffect(() => {
+    // Pre-warm the backend so it's awake before the user clicks Sign In
+    client.get('/').then(() => setServerReady(true)).catch(() => setServerReady(true))
+  }, [])
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
@@ -49,6 +56,9 @@ export default function LoginPage() {
           <div className="text-right">
             <Link to="/forgot-password" className="text-sm text-gray-900 dark:text-white hover:underline">Forgot password?</Link>
           </div>
+          {!serverReady && !loading && (
+            <p className="text-xs text-center text-gray-400 dark:text-gray-500 animate-pulse">Connecting to server…</p>
+          )}
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? 'Signing in…' : 'Sign In'}
           </button>
