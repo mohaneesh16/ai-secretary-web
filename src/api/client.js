@@ -26,14 +26,34 @@ const SILENT_URLS = [
   '/briefing/today',
 ]
 
-let redirecting = false
+let redirecting   = false
+let retryingUrls  = new Set()
+
 client.interceptors.response.use(
   (res) => res,
-  (err) => {
+  async (err) => {
     if (err.response?.status === 401 && !redirecting) {
       const url = err.config?.url || ''
       const isSilent = SILENT_URLS.some((u) => url.includes(u))
       if (!isSilent) {
+        // Retry once after a brief pause — guards against Render cold-start
+        // returning a transient 401 right after a successful login.
+        if (!retryingUrls.has(url)) {
+          retryingUrls.add(url)
+          await new Promise((r) => setTimeout(r, 1500))
+          retryingUrls.delete(url)
+          try {
+            return await client(err.config)
+          } catch (retryErr) {
+            if (retryErr.response?.status === 401 && !redirecting) {
+              redirecting = true
+              localStorage.removeItem('token')
+              localStorage.removeItem('user')
+              window.location.href = '/login'
+            }
+            return Promise.reject(retryErr)
+          }
+        }
         redirecting = true
         localStorage.removeItem('token')
         localStorage.removeItem('user')

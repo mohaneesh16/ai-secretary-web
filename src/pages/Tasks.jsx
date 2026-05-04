@@ -82,7 +82,7 @@ function TaskCard({ task, onToggle, onEdit, onDelete }) {
 
   return (
     <div className={`card p-4 flex items-start gap-3 ${task.status === 'completed' ? 'opacity-60' : ''}`}>
-      <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 text-primary-600">
+      <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
         {task.status === 'completed' ? <CheckCircle2 size={20} /> : <Circle size={20} />}
       </button>
       <div className="flex-1 min-w-0">

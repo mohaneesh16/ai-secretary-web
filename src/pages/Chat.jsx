@@ -6,10 +6,10 @@ function Message({ msg }) {
   const isUser = msg.role === 'user'
   return (
     <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isUser ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'}`}>
-        {isUser ? <User size={16} className="text-white" /> : <Bot size={16} className="text-gray-600 dark:text-gray-300" />}
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isUser ? 'bg-gray-900 dark:bg-white' : 'bg-gray-100 dark:bg-gray-800'}`}>
+        {isUser ? <User size={16} className="text-white dark:text-gray-900" /> : <Bot size={16} className="text-gray-600 dark:text-gray-300" />}
       </div>
-      <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${isUser ? 'bg-primary-600 text-white rounded-tr-sm' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-tl-sm'}`}>
+      <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${isUser ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-tr-sm' : 'bg-white dark:bg-gray-800 border border-gray-200/60 dark:border-gray-700/40 rounded-tl-sm'}`}>
         {msg.content}
       </div>
     </div>

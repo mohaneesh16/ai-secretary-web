@@ -74,7 +74,7 @@ export default function SettingsPage() {
         <div className="bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-800 dark:to-gray-600 h-20" />
         <div className="px-6 pb-6">
           <div className="-mt-10 mb-4 flex items-end justify-between">
-            <div className="w-20 h-20 rounded-2xl bg-white dark:bg-gray-900 border-4 border-white dark:border-gray-900 flex items-center justify-center text-3xl font-bold text-primary-600 shadow-md">
+            <div className="w-20 h-20 rounded-2xl bg-gray-900 dark:bg-white border-4 border-white dark:border-gray-900 flex items-center justify-center text-3xl font-bold text-white dark:text-gray-900 shadow-md">
               {user?.name?.[0]?.toUpperCase() ?? '?'}
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function SettingsPage() {
 
       {/* Profile Settings */}
       <div className="card p-5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-4">Profile</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">Profile</p>
         <div className="space-y-3">
           <div>
             <label className="label">Display Name</label>
@@ -123,7 +123,7 @@ export default function SettingsPage() {
 
       {/* Appearance */}
       <div className="card p-5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-4">Appearance</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">Appearance</p>
         <div className="grid grid-cols-3 gap-2">
           {[
             { value: 'system', icon: Monitor, label: 'System' },
@@ -135,13 +135,13 @@ export default function SettingsPage() {
               onClick={() => changeTheme(value)}
               className={`flex flex-col items-center gap-2 py-4 rounded-xl border-2 transition-all ${
                 theme === value
-                  ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                  ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500'
               }`}
             >
               <Icon size={22} />
               <span className="text-sm font-medium">{label}</span>
-              {theme === value && <CheckCircle2 size={14} className="text-primary-600" />}
+              {theme === value && <CheckCircle2 size={14} className="text-gray-900 dark:text-white" />}
             </button>
           ))}
         </div>
@@ -150,7 +150,7 @@ export default function SettingsPage() {
       {/* Integrations */}
       <div className="card p-5">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary-600">Integrations</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Integrations</p>
           <button onClick={checkGoogleStatus} disabled={checking} className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
             <RefreshCw size={12} className={checking ? 'animate-spin' : ''} /> Refresh
           </button>
@@ -183,7 +183,7 @@ export default function SettingsPage() {
               href={googleConnectUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-500 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                   <p className="text-xs text-gray-500 dark:text-gray-400">Gmail · Calendar · Contacts</p>
                 </div>
               </div>
-              <ChevronRight size={16} className="text-gray-400 group-hover:text-primary-500 transition-colors" />
+              <ChevronRight size={16} className="text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors" />
             </a>
           )}
           <p className="text-xs text-gray-400 dark:text-gray-500 px-1">
@@ -205,7 +205,7 @@ export default function SettingsPage() {
 
       {/* About */}
       <div className="card p-5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-primary-600 mb-4">About</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">About</p>
         <div className="space-y-3">
           {[
             { label: 'App Version', value: '1.0.0' },

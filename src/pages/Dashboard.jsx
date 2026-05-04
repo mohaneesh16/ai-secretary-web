@@ -136,7 +136,7 @@ export default function Dashboard() {
       {/* Morning Briefing */}
       <div className="card p-5">
         <div className="flex items-center gap-2 mb-3">
-          <Bot size={20} className="text-primary-600" />
+          <Bot size={20} className="text-gray-500 dark:text-gray-400" />
           <h2 className="font-semibold">Morning Briefing</h2>
         </div>
         {loading ? (

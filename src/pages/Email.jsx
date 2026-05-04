@@ -196,7 +196,7 @@ export default function Email() {
     <div>
       <h1 className="text-2xl font-bold mb-6">Email</h1>
       <div className="card p-8 text-center">
-        <Mail size={48} className="mx-auto mb-4 text-primary-600 opacity-70" />
+        <Mail size={48} className="mx-auto mb-4 text-gray-400 opacity-70" />
         <h2 className="text-lg font-semibold mb-2">Connect Google Account</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Connect your Google account to access Gmail and send emails directly from AI Secretary.</p>
         <a href={connectUrl} target="_blank" rel="noopener noreferrer" className="btn-primary inline-flex items-center gap-2">

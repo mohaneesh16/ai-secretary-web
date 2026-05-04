@@ -25,7 +25,7 @@ export default function ForgotPassword() {
   }
 
   if (sent) return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#f2f2f7] dark:bg-[#0a0a0a]">
       <div className="card w-full max-w-sm p-8 text-center">
         <div className="text-5xl mb-4">📧</div>
         <h2 className="text-xl font-bold mb-2">Check your email</h2>
@@ -39,14 +39,14 @@ export default function ForgotPassword() {
   )
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#f2f2f7] dark:bg-[#0a0a0a]">
       <div className="card w-full max-w-sm p-8">
         <Link to="/login" className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mb-6">
           <ArrowLeft size={16} /> Back to login
         </Link>
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-primary-600 flex items-center justify-center mb-4">
-            <Bot size={28} className="text-white" />
+          <div className="w-14 h-14 rounded-2xl bg-gray-900 dark:bg-white flex items-center justify-center mb-4">
+            <Bot size={28} className="text-white dark:text-gray-900" />
           </div>
           <h1 className="text-2xl font-bold">Forgot Password</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">Enter your email to receive a reset code</p>

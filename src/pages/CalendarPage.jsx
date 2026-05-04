@@ -25,7 +25,7 @@ function EventModal({ onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">New Event</h2>
         <form onSubmit={submit} className="space-y-3">
@@ -69,7 +69,7 @@ function EventCard({ event, onDelete }) {
   return (
     <div className="card p-4 flex items-start gap-3">
       <div className="w-12 shrink-0 text-center">
-        <p className="text-lg font-bold text-primary-600">{start ? start.getDate() : '—'}</p>
+        <p className="text-lg font-bold text-gray-900 dark:text-white">{start ? start.getDate() : '—'}</p>
         <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">{start ? start.toLocaleString('default', { month: 'short' }) : ''}</p>
       </div>
       <div className="flex-1 min-w-0">
@@ -172,13 +172,13 @@ function CalendarGrid({ events, selectedDate, onSelectDate }) {
             <div
               key={dateStr}
               onClick={() => onSelectDate(isSelected ? null : dateStr)}
-              className={`bg-white dark:bg-gray-900 min-h-[72px] p-1.5 cursor-pointer transition-colors hover:bg-primary-50 dark:hover:bg-primary-900/20 ${isSelected ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`}
+              className={`bg-white dark:bg-gray-900 min-h-[72px] p-1.5 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/60 ${isSelected ? 'bg-gray-50 dark:bg-gray-800/60' : ''}`}
             >
               <div className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium mb-1 ${
                 isToday
-                  ? 'bg-primary-600 text-white'
+                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
                   : isSelected
-                  ? 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300'
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
                   : isWeekend
                   ? 'text-gray-400 dark:text-gray-500'
                   : 'text-gray-700 dark:text-gray-300'
@@ -187,7 +187,7 @@ function CalendarGrid({ events, selectedDate, onSelectDate }) {
               </div>
               <div className="space-y-0.5">
                 {dayEvents.slice(0, 2).map((e, j) => (
-                  <div key={j} className="truncate text-[10px] leading-tight bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded px-1 py-0.5">
+                  <div key={j} className="truncate text-[10px] leading-tight bg-gray-900/10 dark:bg-white/10 text-gray-800 dark:text-gray-200 rounded px-1 py-0.5">
                     {e.title || e.summary}
                   </div>
                 ))}
@@ -245,7 +245,7 @@ export default function CalendarPage() {
     <div className="max-w-md">
       <h1 className="text-2xl font-bold mb-6">Calendar</h1>
       <div className="card p-8 text-center">
-        <Calendar size={48} className="mx-auto mb-4 text-primary-600 opacity-70" />
+        <Calendar size={48} className="mx-auto mb-4 text-gray-400 opacity-70" />
         <h2 className="text-lg font-semibold mb-2">Connect Google Calendar</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Connect your Google account to sync your calendar and create events.</p>
         <a href={connectUrl} target="_blank" rel="noopener noreferrer" className="btn-primary inline-flex items-center gap-2">
