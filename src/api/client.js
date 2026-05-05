@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://pers-ruxy.onrender.com'
+// Dev: VITE_API_URL=http://localhost:3000 (from .env)
+// Prod: VITE_API_URL=/api (from .env.production) → proxied through Vercel to Render
+const BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 const client = axios.create({
   baseURL: BASE_URL,
