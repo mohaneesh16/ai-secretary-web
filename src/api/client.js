@@ -28,6 +28,8 @@ const SILENT_URLS = [
   '/auth/google/status',
   '/contacts/import-google',
   '/briefing/today',
+  '/calendar/events',
+  '/email/',
 ]
 
 let redirecting   = false
