@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-// Dev: VITE_API_URL=http://localhost:3000 (from .env)
-// Prod: VITE_API_URL=/api (from .env.production) → proxied through Vercel to Render
-const BASE_URL = import.meta.env.VITE_API_URL || '/api'
+// In production, always use /api — proxied through Vercel to Render (vercel.json)
+// In development, use localhost:3000 via VITE_API_URL from .env
+const BASE_URL = import.meta.env.DEV
+  ? (import.meta.env.VITE_API_URL || 'http://localhost:3000')
+  : '/api'
 
 const client = axios.create({
   baseURL: BASE_URL,
