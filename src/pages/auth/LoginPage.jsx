@@ -48,7 +48,7 @@ export default function LoginPage() {
           <div className="w-16 h-16 rounded-3xl bg-gray-900 dark:bg-white flex items-center justify-center mb-5 shadow-sm">
             <Bot size={28} className="text-white dark:text-gray-900" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">AI Secretary</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Modev Secretary</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Sign in to your account</p>
         </div>
 

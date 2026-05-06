@@ -146,7 +146,7 @@ export default function Layout() {
         <div className="w-8 h-8 rounded-xl bg-gray-900 dark:bg-white flex items-center justify-center shadow-sm shrink-0">
           <Bot size={16} className="text-white dark:text-gray-900" />
         </div>
-        <span className="font-bold text-sm tracking-tight">AI Secretary</span>
+        <span className="font-bold text-sm tracking-tight">Modev Secretary</span>
       </div>
 
       {/* Search */}
@@ -209,7 +209,7 @@ export default function Layout() {
             <div className="w-6 h-6 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center">
               <Bot size={13} className="text-white dark:text-gray-900" />
             </div>
-            <span className="font-bold text-sm tracking-tight">AI Secretary</span>
+            <span className="font-bold text-sm tracking-tight">Modev Secretary</span>
           </div>
         </header>
 

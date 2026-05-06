@@ -35,7 +35,7 @@ export default function RegisterPage() {
             <Bot size={28} className="text-white dark:text-gray-900" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Get started with AI Secretary</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Get started with Modev Secretary</p>
         </div>
 
         <form onSubmit={submit} className="space-y-4">

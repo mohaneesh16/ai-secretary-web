@@ -79,7 +79,7 @@ export default function Chat() {
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-400 text-sm gap-2">
             <Bot size={36} className="opacity-30" />
-            <p>Start a conversation with your AI Secretary</p>
+            <p>Start a conversation with your Modev Secretary</p>
           </div>
         ) : (
           messages.map((m, i) => <Message key={i} msg={m} />)

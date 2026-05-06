@@ -235,7 +235,7 @@ export default function SettingsPage() {
               <LogOut size={24} className="text-red-500" />
             </div>
             <h2 className="text-lg font-bold mb-1">Sign Out</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Are you sure you want to sign out of AI Secretary?</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Are you sure you want to sign out of Modev Secretary?</p>
             <div className="flex gap-3">
               <button onClick={() => setShowLogout(false)} className="btn-secondary flex-1">Cancel</button>
               <button onClick={handleLogout} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded-lg transition-colors">Sign Out</button>

@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
       <header className="border-b border-gray-100 dark:border-gray-800 px-6 py-4 flex items-center justify-between max-w-4xl mx-auto">
         <Link to="/" className="flex items-center gap-2 font-semibold text-sm">
           <Bot size={18} />
-          AI Secretary
+          Modev Secretary
         </Link>
         <Link to="/login" className="text-sm text-blue-500 hover:underline">Back to app</Link>
       </header>
@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">1. Who We Are</h2>
           <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            AI Secretary ("we", "our", "the app") is a personal productivity assistant that helps
+            Modev Secretary ("we", "our", "the app") is a personal productivity assistant that helps
             you manage tasks, contacts, calendar events, and emails. This policy explains what data
             we collect, how we use it, and your rights.
           </p>
@@ -53,7 +53,7 @@ export default function PrivacyPolicy() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">4. Google API Data</h2>
           <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            AI Secretary's use of data received from Google APIs adheres to the{' '}
+            Modev Secretary's use of data received from Google APIs adheres to the{' '}
             <a href="https://developers.google.com/terms/api-services-user-data-policy"
                target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
               Google API Services User Data Policy
