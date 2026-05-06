@@ -19,7 +19,11 @@ export default function SettingsPage() {
   const [profileError, setProfileError]   = useState('')
 
   const token = localStorage.getItem('token')
-  const googleConnectUrl = `${import.meta.env.VITE_API_URL || 'https://pers-ruxy.onrender.com'}/auth/google?token=${token}`
+  // Use Vercel proxy (/api) in production, direct backend URL in dev
+  const apiBase = import.meta.env.DEV
+    ? (import.meta.env.VITE_API_URL || 'http://localhost:3000')
+    : '/api'
+  const googleConnectUrl = `${apiBase}/auth/google?token=${token}`
 
   const checkGoogleStatus = async () => {
     setChecking(true)
