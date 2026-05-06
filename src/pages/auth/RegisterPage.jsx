@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Bot, Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function RegisterPage() {
@@ -31,8 +31,8 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-canvas">
       <div className="card w-full max-w-sm p-8 shadow-[0_24px_64px_-12px_rgba(0,0,0,0.18)]">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-3xl bg-brand-strong flex items-center justify-center mb-5 shadow-sm">
-            <Bot size={28} className="text-brand-fg" />
+          <div className="w-16 h-16 rounded-3xl overflow-hidden mb-5 shadow-sm">
+            <img src="/logo192.png" alt="Modev Secretary" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
           <p className="text-sm text-fg-muted mt-1">Get started with Modev Secretary</p>

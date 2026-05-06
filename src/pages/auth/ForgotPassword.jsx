@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Bot } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import client from '../../api/client'
 
 export default function ForgotPassword() {
@@ -43,8 +43,8 @@ export default function ForgotPassword() {
           <ArrowLeft size={16} /> Back to login
         </Link>
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-brand-strong flex items-center justify-center mb-4">
-            <Bot size={28} className="text-brand-fg" />
+          <div className="w-14 h-14 rounded-2xl overflow-hidden mb-4">
+            <img src="/logo192.png" alt="Modev Secretary" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-bold">Forgot Password</h1>
           <p className="text-sm text-fg-muted mt-1 text-center">Enter your email to receive a reset code</p>
