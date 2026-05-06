@@ -7,10 +7,10 @@ const PRIORITIES = ['low', 'medium', 'high']
 function TaskModal({ task, onClose, onSave }) {
   const isEdit = !!task?.id
   const [form, setForm] = useState({
-    title:       task?.title       || '',
-    description: task?.description || '',
-    priority:    task?.priority    || 'medium',
-    deadline:    task?.deadline    ? task.deadline.slice(0, 10) : '',
+    title:    task?.title    || '',
+    notes:    task?.notes    || '',
+    priority: task?.priority || 'medium',
+    deadline: task?.deadline ? task.deadline.slice(0, 10) : '',
   })
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
@@ -27,7 +27,7 @@ function TaskModal({ task, onClose, onSave }) {
       else        await client.post('/tasks', payload)
       onSave()
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to save task')
+      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to save task')
     } finally { setLoading(false) }
   }
 
@@ -43,7 +43,7 @@ function TaskModal({ task, onClose, onSave }) {
           </div>
           <div>
             <label className="label">Description</label>
-            <textarea className="input resize-none" rows={3} value={form.description} onChange={set('description')} />
+            <textarea className="input resize-none" rows={3} value={form.notes} onChange={set('notes')} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -82,7 +82,7 @@ function TaskCard({ task, onToggle, onEdit, onDelete }) {
       </button>
       <div className="flex-1 min-w-0">
         <p className={`font-medium text-sm ${task.status === 'completed' ? 'line-through text-fg-dim' : 'text-fg'}`}>{task.title}</p>
-        {task.description && <p className="text-xs text-fg-muted mt-0.5 truncate">{task.description}</p>}
+        {task.notes && <p className="text-xs text-fg-muted mt-0.5 truncate">{task.notes}</p>}
         <div className="flex items-center gap-2 mt-2 flex-wrap">
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityColor[task.priority] || priorityColor.medium}`}>{task.priority}</span>
           {task.deadline && (
@@ -108,15 +108,19 @@ function TaskCard({ task, onToggle, onEdit, onDelete }) {
 }
 
 export default function Tasks() {
-  const [tasks, setTasks]     = useState([])
-  const [loading, setLoading] = useState(true)
-  const [modal, setModal]     = useState(null)
-  const [filter, setFilter]   = useState('all')
+  const [tasks, setTasks]       = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [modal, setModal]       = useState(null)
+  const [filter, setFilter]     = useState('all')
 
   const load = async () => {
+    setLoadError('')
     try {
       const { data } = await client.get('/tasks')
       setTasks(data.tasks || [])
+    } catch (err) {
+      setLoadError(err.response?.data?.message || err.response?.data?.error || 'Failed to load tasks')
     } finally { setLoading(false) }
   }
 
@@ -164,6 +168,10 @@ export default function Tasks() {
           </button>
         ))}
       </div>
+
+      {loadError && (
+        <p className="text-sm text-danger bg-danger-subtle px-4 py-3 rounded-xl">{loadError}</p>
+      )}
 
       {loading ? (
         <div className="space-y-3">{[1,2,3].map((i) => <div key={i} className="h-20 bg-surface-raised rounded-xl animate-pulse" />)}</div>
