@@ -35,7 +35,7 @@
   /* Brand — use sparingly (logo, active nav, primary CTA) */
   --brand:           #e8dcc4;
   --brand-strong:    #1a1008;
-  --brand-fg:        #1a1008;
+  --brand-fg:        #e8dcc4;   /* text ON a brand-strong background */
 
   /* Accent — Executive Blue (interactive, AI, focus, notifications) */
   --accent:          #4872a8;
@@ -120,7 +120,7 @@
            px-5 py-2.5 rounded-full transition-all duration-150 ease-out
            disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 shadow-sm;
     background-color: var(--brand-strong);
-    color: var(--brand);
+    color: var(--brand-fg);
   }
   .btn-primary:hover { filter: brightness(1.12); }
 

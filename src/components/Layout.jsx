@@ -21,12 +21,12 @@ const NAV = [
 // Semantic design tokens — all colors via CSS variables
 const S = {
   sidebar:     'bg-canvas-subtle border-r border-line',
-  navActive:   'bg-brand-strong text-brand shadow-sm',
+  navActive:   'bg-brand-strong text-brand-fg dark:bg-surface-overlay dark:text-brand shadow-sm',
   navIdle:     'text-fg-muted hover:bg-surface hover:text-fg',
   logoBox:     'bg-brand-strong',
-  logoIcon:    'text-brand',
+  logoIcon:    'text-brand-fg',
   userBox:     'bg-surface border border-line',
-  userAvatar:  'bg-brand-strong text-brand',
+  userAvatar:  'bg-brand-strong text-brand-fg',
   userEmail:   'text-fg-dim',
   logoutBtn:   'text-fg-dim hover:bg-danger-subtle hover:text-danger',
   searchBox:   'border-line-strong bg-surface',
