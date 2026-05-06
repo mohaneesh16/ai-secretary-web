@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, CheckSquare, Users, MessageSquare,
-  Mail, Calendar, Settings, LogOut, Bot, Menu, Bell, Search, X
+  Mail, Calendar, Settings, LogOut, Menu, Bell, Search, X
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
@@ -153,8 +153,8 @@ export default function Layout() {
   const Sidebar = () => (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-2.5 px-4 py-5">
-        <div className={`w-8 h-8 rounded-xl ${S.logoBox} flex items-center justify-center shadow-sm shrink-0`}>
-          <Bot size={16} className={S.logoIcon} />
+        <div className="w-8 h-8 rounded-xl overflow-hidden shadow-sm shrink-0">
+          <img src="/logo192.png" alt="Modev Secretary" className="w-full h-full object-cover" />
         </div>
         <span className="font-bold text-sm tracking-tight">Modev Secretary</span>
       </div>
@@ -205,8 +205,8 @@ export default function Layout() {
             <Menu size={18} />
           </button>
           <div className="flex items-center gap-2">
-            <div className={`w-6 h-6 rounded-lg ${S.logoBox} flex items-center justify-center`}>
-              <Bot size={13} className={S.logoIcon} />
+            <div className="w-6 h-6 rounded-lg overflow-hidden">
+              <img src="/logo192.png" alt="Modev Secretary" className="w-full h-full object-cover" />
             </div>
             <span className="font-bold text-sm tracking-tight">Modev Secretary</span>
           </div>
