@@ -8,17 +8,17 @@ export default {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
       },
       colors: {
-        primary: {
-          50:  '#f5f5f5',
-          100: '#ebebeb',
-          200: '#d6d6d6',
-          300: '#b0b0b0',
-          400: '#808080',
-          500: '#505050',
-          600: '#1a1a1a',
-          700: '#111111',
-          800: '#080808',
-          900: '#000000',
+        sandal: {
+          DEFAULT: '#e8dcc4',
+          dark:    '#cfc4a8',
+          muted:   '#8a7a60',
+          subtle:  '#4a4030',
+          bg:      '#2a2620',
+        },
+        surface: {
+          DEFAULT: '#111111',
+          raised:  '#161616',
+          high:    '#1e1e1e',
         },
       },
       boxShadow: {

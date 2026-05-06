@@ -6,7 +6,8 @@
   * { box-sizing: border-box; }
 
   body {
-    @apply bg-[#f2f2f7] dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100;
+    background-color: #0a0a0a;
+    color: #e8dcc4;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -19,30 +20,34 @@
   /* ── Buttons ── */
   .btn-primary {
     @apply inline-flex items-center justify-center
-           bg-gray-900 hover:bg-black active:scale-[0.97]
-           dark:bg-white dark:hover:bg-gray-100 dark:active:bg-gray-200
-           text-white dark:text-gray-900
+           active:scale-[0.97]
            font-semibold text-sm tracking-tight
            px-5 py-2.5 rounded-full
            transition-all duration-150 ease-out
            disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100
            shadow-sm;
+    background-color: #e8dcc4;
+    color: #0a0a0a;
   }
+  .btn-primary:hover { background-color: #d4c8b0; }
+
   .btn-secondary {
     @apply inline-flex items-center justify-center
-           bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-[0.97]
-           dark:bg-gray-800 dark:hover:bg-gray-700 dark:active:bg-gray-600
-           text-gray-700 dark:text-gray-200
+           active:scale-[0.97]
            font-semibold text-sm tracking-tight
            px-5 py-2.5 rounded-full
-           border border-gray-200/80 dark:border-gray-700/60
            transition-all duration-150 ease-out
            shadow-sm;
+    background-color: #1a1a1a;
+    color: #e8dcc4;
+    border: 1px solid #2a2a2a;
   }
+  .btn-secondary:hover { background-color: #222222; }
+
   .btn-danger {
     @apply inline-flex items-center justify-center
-           text-red-500 dark:text-red-400
-           hover:bg-red-50 dark:hover:bg-red-950/20 active:scale-[0.97]
+           text-red-400
+           hover:bg-red-950/20 active:scale-[0.97]
            font-semibold text-sm
            px-5 py-2.5 rounded-full
            transition-all duration-150 ease-out;
@@ -51,36 +56,35 @@
   /* ── Inputs ── */
   .input {
     @apply w-full px-4 py-2.5
-           bg-white dark:bg-gray-800/80
-           border border-gray-200/80 dark:border-gray-700/50
            rounded-xl
-           text-sm text-gray-900 dark:text-gray-100
-           placeholder-gray-400 dark:placeholder-gray-500
+           text-sm
            focus:outline-none focus:ring-2
-           focus:ring-gray-900/10 dark:focus:ring-white/10
-           focus:border-gray-400 dark:focus:border-gray-500
            transition-all duration-200
            shadow-sm;
+    background-color: #111111;
+    border: 1px solid #2a2a2a;
+    color: #e8dcc4;
   }
+  .input::placeholder { color: #5a5040; }
+  .input:focus { ring-color: #e8dcc4; border-color: #4a4030; }
 
   /* ── Cards ── */
   .card {
-    @apply bg-white dark:bg-gray-900
-           rounded-2xl
-           border border-gray-200/60 dark:border-gray-700/30;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04);
+    @apply rounded-2xl;
+    background-color: #111111;
+    border: 1px solid #1e1e1e;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
   /* ── Form labels ── */
   .label {
-    @apply block text-xs font-medium
-           text-gray-500 dark:text-gray-400
-           mb-1.5;
+    @apply block text-xs font-medium mb-1.5;
+    color: #8a7a60;
   }
 }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar       { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { @apply bg-gray-300/70 dark:bg-gray-600/70 rounded-full; }
-::-webkit-scrollbar-thumb:hover { @apply bg-gray-400 dark:bg-gray-500; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
