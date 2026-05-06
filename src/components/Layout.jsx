@@ -22,7 +22,7 @@ const NAV = [
 const S = {
   sidebar:     'bg-[#ddd0b4] dark:bg-[#0d0d0d] border-r border-[#c8bc9c] dark:border-[#1a1a1a]',
   navActive:   'bg-[#1a1008] dark:bg-[#e8dcc4] text-[#e8dcc4] dark:text-[#0a0a0a]',
-  navIdle:     'text-[#6a5a40] dark:text-[#8a7a60] hover:bg-[#ccc0a4] dark:hover:bg-[#1a1a1a] hover:text-[#1a1008] dark:hover:text-[#e8dcc4]',
+  navIdle:     'text-[#6a5a40] dark:text-[#c8bc9c] hover:bg-[#ccc0a4] dark:hover:bg-[#1a1a1a] hover:text-[#1a1008] dark:hover:text-[#e8dcc4]',
   logoBox:     'bg-[#1a1008] dark:bg-[#e8dcc4]',
   logoIcon:    'text-[#e8dcc4] dark:text-[#0a0a0a]',
   userBox:     'bg-[#ccc0a4] dark:bg-[#1a1a1a] border border-[#b8ac94] dark:border-[#2a2a2a]',
