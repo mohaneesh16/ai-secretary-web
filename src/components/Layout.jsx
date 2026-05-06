@@ -18,21 +18,21 @@ const NAV = [
   { to: '/settings',   label: 'Settings',  icon: Settings },
 ]
 
-// Light: sandal shades  |  Dark: black shades
+// Semantic design tokens — all colors via CSS variables
 const S = {
-  sidebar:     'bg-[#ddd0b4] dark:bg-[#0d0d0d] border-r border-[#c8bc9c] dark:border-[#1a1a1a]',
-  navActive:   'bg-[#1a1008] dark:bg-[#e8dcc4] text-[#e8dcc4] dark:text-[#0a0a0a]',
-  navIdle:     'text-[#6a5a40] dark:text-[#c8bc9c] hover:bg-[#ccc0a4] dark:hover:bg-[#1a1a1a] hover:text-[#1a1008] dark:hover:text-[#e8dcc4]',
-  logoBox:     'bg-[#1a1008] dark:bg-[#e8dcc4]',
-  logoIcon:    'text-[#e8dcc4] dark:text-[#0a0a0a]',
-  userBox:     'bg-[#ccc0a4] dark:bg-[#1a1a1a] border border-[#b8ac94] dark:border-[#2a2a2a]',
-  userAvatar:  'bg-[#1a1008] dark:bg-[#e8dcc4] text-[#e8dcc4] dark:text-[#0a0a0a]',
-  userEmail:   'text-[#8a7a60] dark:text-[#6a5a50]',
-  logoutBtn:   'text-[#8a7a60] dark:text-[#6a5a50] hover:bg-[#b8ac94]/60 dark:hover:bg-[#2a2a2a] hover:text-red-600 dark:hover:text-red-400',
-  searchBox:   'border-[#b8ac94] dark:border-[#2a2a2a] bg-[#ccc0a4] dark:bg-[#1a1a1a]',
-  searchFocus: 'border-[#a09070] dark:border-[#3a3a3a] bg-[#c8bc9c] dark:bg-[#222222]',
-  searchInput: 'text-[#1a1008] dark:text-[#e8dcc4] placeholder-[#8a7a60] dark:placeholder-[#5a5040]',
-  topbar:      'bg-[#ddd0b4] dark:bg-[#0d0d0d] border-b border-[#c8bc9c] dark:border-[#1a1a1a]',
+  sidebar:     'bg-canvas-subtle border-r border-line',
+  navActive:   'bg-brand-strong text-brand shadow-sm',
+  navIdle:     'text-fg-muted hover:bg-surface hover:text-fg',
+  logoBox:     'bg-brand-strong',
+  logoIcon:    'text-brand',
+  userBox:     'bg-surface border border-line',
+  userAvatar:  'bg-brand-strong text-brand',
+  userEmail:   'text-fg-dim',
+  logoutBtn:   'text-fg-dim hover:bg-danger-subtle hover:text-danger',
+  searchBox:   'border-line-strong bg-surface',
+  searchFocus: 'border-line-focus bg-surface',
+  searchInput: 'text-fg placeholder:text-fg-dim',
+  topbar:      'bg-canvas-subtle border-b border-line',
 }
 
 function GlobalSearch() {
@@ -77,7 +77,7 @@ function GlobalSearch() {
   return (
     <div className="relative" ref={ref}>
       <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-200 ${focused ? S.searchFocus : S.searchBox}`}>
-        <Search size={13} className="text-[#8a7a60] dark:text-[#5a5040] shrink-0" />
+        <Search size={13} className="text-fg-dim shrink-0" />
         <input
           type="text"
           placeholder="Search…"
@@ -89,23 +89,23 @@ function GlobalSearch() {
         />
         {query && (
           <button onClick={() => { setQuery(''); setResults(null) }} className="shrink-0">
-            <X size={11} className="text-[#8a7a60]" />
+            <X size={11} className="text-fg-dim" />
           </button>
         )}
       </div>
 
       {query && focused && (
         <div className="absolute top-full mt-2 left-0 right-0 card shadow-[0_24px_64px_-12px_rgba(0,0,0,0.18)] z-50 overflow-hidden py-1">
-          {loading && <p className="text-xs text-[#8a7a60] px-3 py-2.5">Searching…</p>}
+          {loading && <p className="text-xs text-fg-muted px-3 py-2.5">Searching…</p>}
           {!loading && results && total === 0 && (
-            <p className="text-xs text-[#8a7a60] px-3 py-3">No results for "{query}"</p>
+            <p className="text-xs text-fg-muted px-3 py-3">No results for "{query}"</p>
           )}
           {!loading && results?.tasks?.length > 0 && (
             <div>
-              <p className="text-[10px] font-bold text-[#8a7a60] dark:text-[#5a5040] uppercase tracking-widest px-3 pt-2.5 pb-1">Tasks</p>
+              <p className="text-[10px] font-bold text-fg-dim uppercase tracking-widest px-3 pt-2.5 pb-1">Tasks</p>
               {results.tasks.map(t => (
                 <button key={t.id} onClick={() => go('/tasks')}
-                  className="w-full text-left px-3 py-2 hover:bg-[#d4c8b0] dark:hover:bg-[#1a1a1a] text-xs truncate transition-colors">
+                  className="w-full text-left px-3 py-2 hover:bg-surface-raised text-xs truncate transition-colors text-fg">
                   {t.title}
                 </button>
               ))}
@@ -113,11 +113,11 @@ function GlobalSearch() {
           )}
           {!loading && results?.contacts?.length > 0 && (
             <div>
-              <p className="text-[10px] font-bold text-[#8a7a60] dark:text-[#5a5040] uppercase tracking-widest px-3 pt-2.5 pb-1">Contacts</p>
+              <p className="text-[10px] font-bold text-fg-dim uppercase tracking-widest px-3 pt-2.5 pb-1">Contacts</p>
               {results.contacts.map(c => (
                 <button key={c.id} onClick={() => go('/contacts')}
-                  className="w-full text-left px-3 py-2 hover:bg-[#d4c8b0] dark:hover:bg-[#1a1a1a] text-xs truncate transition-colors">
-                  {c.name}{c.email && <span className="text-[#8a7a60]"> · {c.email}</span>}
+                  className="w-full text-left px-3 py-2 hover:bg-surface-raised text-xs truncate transition-colors text-fg">
+                  {c.name}{c.email && <span className="text-fg-muted"> · {c.email}</span>}
                 </button>
               ))}
             </div>
@@ -201,7 +201,7 @@ export default function Layout() {
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <header className={`md:hidden flex items-center gap-3 px-4 py-3 ${S.topbar}`}>
-          <button onClick={() => setOpen(true)} className="p-1.5 rounded-lg hover:bg-[#ccc0a4] dark:hover:bg-[#1a1a1a] transition-colors">
+          <button onClick={() => setOpen(true)} className="p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
             <Menu size={18} />
           </button>
           <div className="flex items-center gap-2">
