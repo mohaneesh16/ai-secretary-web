@@ -76,7 +76,7 @@ function TaskCard({ task, onToggle, onEdit, onDelete }) {
   const isOverdue = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'completed'
 
   return (
-    <div className={`card p-4 flex items-start gap-3 ${task.status === 'completed' ? 'opacity-60' : ''}`}>
+    <div className={`card p-4 flex items-start gap-3 ${task.status === 'completed' ? 'opacity-80' : ''}`}>
       <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 text-fg-dim hover:text-fg transition-colors">
         {task.status === 'completed' ? <CheckCircle2 size={20} /> : <Circle size={20} />}
       </button>
