@@ -23,17 +23,12 @@ function TaskModal({ task, onClose, onSave }) {
     setLoading(true)
     try {
       const payload = { ...form, deadline: form.deadline || null }
-      if (isEdit) {
-        await client.put(`/tasks/${task.id}`, payload)
-      } else {
-        await client.post('/tasks', payload)
-      }
+      if (isEdit) await client.put(`/tasks/${task.id}`, payload)
+      else        await client.post('/tasks', payload)
       onSave()
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to save task')
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   return (
@@ -41,7 +36,7 @@ function TaskModal({ task, onClose, onSave }) {
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">{isEdit ? 'Edit Task' : 'New Task'}</h2>
         <form onSubmit={submit} className="space-y-3">
-          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>}
+          {error && <p className="text-sm text-danger bg-danger-subtle px-3 py-2 rounded-lg">{error}</p>}
           <div>
             <label className="label">Title *</label>
             <input className="input" value={form.title} onChange={set('title')} required />
@@ -74,24 +69,24 @@ function TaskModal({ task, onClose, onSave }) {
 
 function TaskCard({ task, onToggle, onEdit, onDelete }) {
   const priorityColor = {
-    low:    'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500',
-    medium: 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
-    high:   'bg-gray-900 text-white dark:bg-white dark:text-gray-900',
+    low:    'bg-surface-raised text-fg-dim',
+    medium: 'bg-surface-overlay text-fg-muted',
+    high:   'bg-brand-strong text-brand-fg',
   }
   const isOverdue = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'completed'
 
   return (
     <div className={`card p-4 flex items-start gap-3 ${task.status === 'completed' ? 'opacity-60' : ''}`}>
-      <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+      <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 text-fg-dim hover:text-fg transition-colors">
         {task.status === 'completed' ? <CheckCircle2 size={20} /> : <Circle size={20} />}
       </button>
       <div className="flex-1 min-w-0">
-        <p className={`font-medium text-sm ${task.status === 'completed' ? 'line-through text-gray-400' : ''}`}>{task.title}</p>
-        {task.description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">{task.description}</p>}
+        <p className={`font-medium text-sm ${task.status === 'completed' ? 'line-through text-fg-dim' : 'text-fg'}`}>{task.title}</p>
+        {task.description && <p className="text-xs text-fg-muted mt-0.5 truncate">{task.description}</p>}
         <div className="flex items-center gap-2 mt-2 flex-wrap">
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityColor[task.priority] || priorityColor.medium}`}>{task.priority}</span>
           {task.deadline && (
-            <span className={`text-xs flex items-center gap-1 ${isOverdue ? 'text-red-500' : 'text-gray-400'}`}>
+            <span className={`text-xs flex items-center gap-1 ${isOverdue ? 'text-danger' : 'text-fg-dim'}`}>
               {isOverdue && <AlertCircle size={12} />}
               {new Date(task.deadline).toLocaleDateString()}
             </span>
@@ -100,11 +95,11 @@ function TaskCard({ task, onToggle, onEdit, onDelete }) {
       </div>
       <div className="flex gap-1 shrink-0">
         {task.status !== 'completed' && (
-          <button onClick={() => onEdit(task)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400">
+          <button onClick={() => onEdit(task)} className="p-1.5 rounded-lg hover:bg-surface-raised text-fg-dim transition-colors">
             <Pencil size={15} />
           </button>
         )}
-        <button onClick={() => onDelete(task.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-400 hover:text-red-500">
+        <button onClick={() => onDelete(task.id)} className="p-1.5 rounded-lg hover:bg-danger-subtle text-fg-dim hover:text-danger transition-colors">
           <Trash2 size={15} />
         </button>
       </div>
@@ -122,9 +117,7 @@ export default function Tasks() {
     try {
       const { data } = await client.get('/tasks')
       setTasks(data.tasks || [])
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   useEffect(() => { load() }, [])
@@ -152,7 +145,7 @@ export default function Tasks() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Tasks</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{tasks.filter((t) => t.status !== 'completed').length} pending</p>
+          <p className="text-sm text-fg-muted">{tasks.filter((t) => t.status !== 'completed').length} pending</p>
         </div>
         <button onClick={() => setModal({})} className="btn-primary flex items-center gap-2">
           <Plus size={16} /> New Task
@@ -164,8 +157,8 @@ export default function Tasks() {
           <button key={f} onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-all duration-150 ${
               filter === f
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
-                : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/40 hover:bg-gray-50 dark:hover:bg-gray-700'
+                ? 'bg-brand-strong text-brand-fg shadow-sm'
+                : 'bg-surface text-fg-muted border border-line hover:bg-surface-raised'
             }`}>
             {f}
           </button>
@@ -173,9 +166,9 @@ export default function Tasks() {
       </div>
 
       {loading ? (
-        <div className="space-y-3">{[1,2,3].map((i) => <div key={i} className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />)}</div>
+        <div className="space-y-3">{[1,2,3].map((i) => <div key={i} className="h-20 bg-surface-raised rounded-xl animate-pulse" />)}</div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-fg-dim">
           <CheckCircle2 size={40} className="mx-auto mb-3 opacity-30" />
           <p>No tasks here</p>
         </div>

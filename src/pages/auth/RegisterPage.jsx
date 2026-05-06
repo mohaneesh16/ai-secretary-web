@@ -28,19 +28,19 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#f2f2f7] dark:bg-[#0a0a0a]">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-canvas">
       <div className="card w-full max-w-sm p-8 shadow-[0_24px_64px_-12px_rgba(0,0,0,0.18)]">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-3xl bg-gray-900 dark:bg-white flex items-center justify-center mb-5 shadow-sm">
-            <Bot size={28} className="text-white dark:text-gray-900" />
+          <div className="w-16 h-16 rounded-3xl bg-brand-strong flex items-center justify-center mb-5 shadow-sm">
+            <Bot size={28} className="text-brand-fg" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Get started with Modev Secretary</p>
+          <p className="text-sm text-fg-muted mt-1">Get started with Modev Secretary</p>
         </div>
 
         <form onSubmit={submit} className="space-y-4">
-          {error   && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>}
-          {success && <p className="text-sm text-green-600 bg-green-50 dark:bg-green-950/30 px-3 py-2 rounded-lg">{success}</p>}
+          {error   && <p className="text-sm text-danger bg-danger-subtle px-3 py-2 rounded-lg">{error}</p>}
+          {success && <p className="text-sm text-positive bg-positive-subtle px-3 py-2 rounded-lg">{success}</p>}
           <div>
             <label className="label">Full Name</label>
             <input className="input" type="text" placeholder="John Doe" value={form.name} onChange={set('name')} required />
@@ -53,7 +53,8 @@ export default function RegisterPage() {
             <label className="label">Password</label>
             <div className="relative">
               <input className="input pr-10" type={showPw ? 'text' : 'password'} placeholder="Min 8 characters" value={form.password} onChange={set('password')} required />
-              <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <button type="button" onClick={() => setShowPw(!showPw)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-fg-dim hover:text-fg-muted transition-colors">
                 {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -65,14 +66,12 @@ export default function RegisterPage() {
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? 'Creating account…' : 'Create Account'}
           </button>
-          {loginHint && (
-            <p className="text-xs text-center text-gray-400 dark:text-gray-500 animate-pulse">{loginHint}</p>
-          )}
+          {loginHint && <p className="text-xs text-center text-fg-dim animate-pulse">{loginHint}</p>}
         </form>
 
-        <p className="text-sm text-center text-gray-500 mt-6">
+        <p className="text-sm text-center text-fg-muted mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-gray-900 dark:text-white font-semibold hover:underline">Sign in</Link>
+          <Link to="/login" className="text-fg font-semibold hover:underline">Sign in</Link>
         </p>
       </div>
     </div>

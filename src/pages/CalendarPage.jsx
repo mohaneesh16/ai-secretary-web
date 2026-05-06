@@ -3,7 +3,7 @@ import { Plus, Trash2, Calendar, RefreshCw, MapPin, Clock, ChevronLeft, ChevronR
 import client from '../api/client'
 
 function EventModal({ onClose, onSave }) {
-  const [form, setForm] = useState({ title: '', start_time: '', end_time: '', location: '', description: '' })
+  const [form, setForm]   = useState({ title: '', start_time: '', end_time: '', location: '', description: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
 
@@ -19,9 +19,7 @@ function EventModal({ onClose, onSave }) {
       onSave()
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create event')
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   return (
@@ -29,7 +27,7 @@ function EventModal({ onClose, onSave }) {
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">New Event</h2>
         <form onSubmit={submit} className="space-y-3">
-          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>}
+          {error && <p className="text-sm text-danger bg-danger-subtle px-3 py-2 rounded-lg">{error}</p>}
           <div>
             <label className="label">Title *</label>
             <input className="input" value={form.title} onChange={set('title')} required />
@@ -69,26 +67,26 @@ function EventCard({ event, onDelete }) {
   return (
     <div className="card p-4 flex items-start gap-3">
       <div className="w-12 shrink-0 text-center">
-        <p className="text-lg font-bold text-gray-900 dark:text-white">{start ? start.getDate() : '—'}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">{start ? start.toLocaleString('default', { month: 'short' }) : ''}</p>
+        <p className="text-lg font-bold text-fg">{start ? start.getDate() : '—'}</p>
+        <p className="text-xs text-fg-muted uppercase">{start ? start.toLocaleString('default', { month: 'short' }) : ''}</p>
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-medium text-sm">{event.title || event.summary}</p>
         {start && (
-          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
+          <p className="text-xs text-fg-muted flex items-center gap-1 mt-1">
             <Clock size={11} />
             {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             {end && ` – ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
           </p>
         )}
         {event.location && (
-          <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
+          <p className="text-xs text-fg-muted flex items-center gap-1 mt-0.5">
             <MapPin size={11} /> {event.location}
           </p>
         )}
-        {event.description && <p className="text-xs text-gray-400 mt-1 truncate">{event.description}</p>}
+        {event.description && <p className="text-xs text-fg-dim mt-1 truncate">{event.description}</p>}
       </div>
-      <button onClick={() => onDelete(event.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-400 hover:text-red-500">
+      <button onClick={() => onDelete(event.id)} className="p-1.5 rounded-lg hover:bg-danger-subtle text-fg-dim hover:text-danger transition-colors">
         <Trash2 size={15} />
       </button>
     </div>
@@ -103,16 +101,15 @@ function CalendarGrid({ events, selectedDate, onSelectDate }) {
     return { year: d.getFullYear(), month: d.getMonth() }
   })
 
-  const today = new Date()
+  const today    = new Date()
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-  const firstDay  = new Date(cursor.year, cursor.month, 1)
-  const lastDay   = new Date(cursor.year, cursor.month + 1, 0)
-  const startPad  = firstDay.getDay()
+  const firstDay   = new Date(cursor.year, cursor.month, 1)
+  const lastDay    = new Date(cursor.year, cursor.month + 1, 0)
+  const startPad   = firstDay.getDay()
   const totalCells = startPad + lastDay.getDate()
-  const rows      = Math.ceil(totalCells / 7)
+  const rows       = Math.ceil(totalCells / 7)
 
-  // Map events to their local date string
   const eventsByDate = {}
   events.forEach((e) => {
     if (!e.start_time) return
@@ -122,8 +119,8 @@ function CalendarGrid({ events, selectedDate, onSelectDate }) {
     eventsByDate[key].push(e)
   })
 
-  const prev = () => setCursor((c) => c.month === 0 ? { year: c.year - 1, month: 11 } : { ...c, month: c.month - 1 })
-  const next = () => setCursor((c) => c.month === 11 ? { year: c.year + 1, month: 0 } : { ...c, month: c.month + 1 })
+  const prev    = () => setCursor((c) => c.month === 0 ? { year: c.year - 1, month: 11 } : { ...c, month: c.month - 1 })
+  const next    = () => setCursor((c) => c.month === 11 ? { year: c.year + 1, month: 0 } : { ...c, month: c.month + 1 })
   const goToday = () => { const d = new Date(); setCursor({ year: d.getFullYear(), month: d.getMonth() }); onSelectDate(todayStr) }
 
   const monthLabel = firstDay.toLocaleString('default', { month: 'long', year: 'numeric' })
@@ -137,62 +134,51 @@ function CalendarGrid({ events, selectedDate, onSelectDate }) {
 
   return (
     <div className="card p-4">
-      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h2 className="font-semibold text-base">{monthLabel}</h2>
-          <button onClick={goToday} className="text-xs px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">Today</button>
+          <button onClick={goToday} className="text-xs px-2 py-0.5 rounded-md bg-surface-raised text-fg-muted hover:bg-surface-overlay transition-colors">Today</button>
         </div>
         <div className="flex gap-1">
-          <button onClick={prev} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500"><ChevronLeft size={16} /></button>
-          <button onClick={next} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500"><ChevronRight size={16} /></button>
+          <button onClick={prev} className="p-1.5 rounded-lg hover:bg-surface-raised text-fg-muted transition-colors"><ChevronLeft size={16} /></button>
+          <button onClick={next} className="p-1.5 rounded-lg hover:bg-surface-raised text-fg-muted transition-colors"><ChevronRight size={16} /></button>
         </div>
       </div>
 
-      {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 py-1">{d}</div>
+          <div key={d} className="text-center text-xs font-medium text-fg-dim py-1">{d}</div>
         ))}
       </div>
 
-      {/* Calendar cells */}
-      <div className="grid grid-cols-7 gap-px bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800">
+      <div className="grid grid-cols-7 gap-px bg-line rounded-xl overflow-hidden border border-line">
         {cells.map((cell, i) => {
-          if (!cell) return (
-            <div key={i} className="bg-white dark:bg-gray-900 min-h-[72px] p-1" />
-          )
+          if (!cell) return <div key={i} className="bg-surface min-h-[72px] p-1" />
           const { dayNum, dateStr } = cell
-          const dayEvents = eventsByDate[dateStr] || []
+          const dayEvents  = eventsByDate[dateStr] || []
           const isToday    = dateStr === todayStr
           const isSelected = dateStr === selectedDate
           const isWeekend  = i % 7 === 0 || i % 7 === 6
 
           return (
-            <div
-              key={dateStr}
-              onClick={() => onSelectDate(isSelected ? null : dateStr)}
-              className={`bg-white dark:bg-gray-900 min-h-[72px] p-1.5 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/60 ${isSelected ? 'bg-gray-50 dark:bg-gray-800/60' : ''}`}
-            >
+            <div key={dateStr} onClick={() => onSelectDate(isSelected ? null : dateStr)}
+              className={`bg-surface min-h-[72px] p-1.5 cursor-pointer transition-colors hover:bg-surface-raised ${isSelected ? 'bg-surface-raised' : ''}`}>
               <div className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium mb-1 ${
-                isToday
-                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                  : isSelected
-                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-                  : isWeekend
-                  ? 'text-gray-400 dark:text-gray-500'
-                  : 'text-gray-700 dark:text-gray-300'
+                isToday    ? 'bg-brand-strong text-brand-fg'
+                : isSelected ? 'bg-surface-overlay text-fg'
+                : isWeekend  ? 'text-fg-dim'
+                : 'text-fg-muted'
               }`}>
                 {dayNum}
               </div>
               <div className="space-y-0.5">
                 {dayEvents.slice(0, 2).map((e, j) => (
-                  <div key={j} className="truncate text-[10px] leading-tight bg-gray-900/10 dark:bg-white/10 text-gray-800 dark:text-gray-200 rounded px-1 py-0.5">
+                  <div key={j} className="truncate text-[10px] leading-tight bg-accent-subtle text-accent rounded px-1 py-0.5">
                     {e.title || e.summary}
                   </div>
                 ))}
                 {dayEvents.length > 2 && (
-                  <div className="text-[10px] text-gray-400 px-1">+{dayEvents.length - 2} more</div>
+                  <div className="text-[10px] text-fg-dim px-1">+{dayEvents.length - 2} more</div>
                 )}
               </div>
             </div>
@@ -204,9 +190,9 @@ function CalendarGrid({ events, selectedDate, onSelectDate }) {
 }
 
 export default function CalendarPage() {
-  const [events, setEvents]         = useState([])
-  const [loading, setLoading]       = useState(true)
-  const [modal, setModal]           = useState(false)
+  const [events, setEvents]             = useState([])
+  const [loading, setLoading]           = useState(true)
+  const [modal, setModal]               = useState(false)
   const [needsConnect, setNeedsConnect] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
 
@@ -214,7 +200,6 @@ export default function CalendarPage() {
     setLoading(true)
     try {
       const { data } = await client.get('/calendar/events')
-      // Deduplicate by id
       const seen = new Set()
       const deduped = (data.events || []).filter((e) => {
         if (!e.id || seen.has(e.id)) return false
@@ -225,9 +210,7 @@ export default function CalendarPage() {
       setNeedsConnect(false)
     } catch (err) {
       if (err.response?.status === 403) setNeedsConnect(true)
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   useEffect(() => { load() }, [])
@@ -245,19 +228,18 @@ export default function CalendarPage() {
     <div className="max-w-md">
       <h1 className="text-2xl font-bold mb-6">Calendar</h1>
       <div className="card p-8 text-center">
-        <Calendar size={48} className="mx-auto mb-4 text-gray-400 opacity-70" />
+        <Calendar size={48} className="mx-auto mb-4 text-fg-dim opacity-70" />
         <h2 className="text-lg font-semibold mb-2">Connect Google Calendar</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Connect your Google account to sync your calendar and create events.</p>
+        <p className="text-sm text-fg-muted mb-6">Connect your Google account to sync your calendar and create events.</p>
         <a href={connectUrl} target="_blank" rel="noopener noreferrer" className="btn-primary inline-flex items-center gap-2">
           Connect Google Account
         </a>
-        <button onClick={load} className="block mx-auto mt-3 text-sm text-gray-500 hover:underline">I already connected, refresh</button>
+        <button onClick={load} className="block mx-auto mt-3 text-sm text-fg-muted hover:underline">I already connected, refresh</button>
       </div>
     </div>
   )
 
   const sorted = [...events].sort((a, b) => new Date(a.start_time || 0) - new Date(b.start_time || 0))
-
   const listEvents = selectedDate
     ? sorted.filter((e) => {
         if (!e.start_time) return false
@@ -276,7 +258,7 @@ export default function CalendarPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{listLabel}</p>
+          <p className="text-sm text-fg-muted">{listLabel}</p>
         </div>
         <div className="flex gap-2">
           <button onClick={load} className="btn-secondary flex items-center gap-2"><RefreshCw size={15} /> Sync</button>
@@ -286,22 +268,20 @@ export default function CalendarPage() {
 
       {loading ? (
         <div className="space-y-3">
-          <div className="h-80 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />
-          {[1,2,3].map((i) => <div key={i} className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />)}
+          <div className="h-80 bg-surface-raised rounded-xl animate-pulse" />
+          {[1,2,3].map((i) => <div key={i} className="h-20 bg-surface-raised rounded-xl animate-pulse" />)}
         </div>
       ) : (
         <>
           <CalendarGrid events={events} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
-
           {selectedDate && (
             <div className="flex items-center justify-between px-1">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{listLabel}</p>
-              <button onClick={() => setSelectedDate(null)} className="text-xs text-gray-400 hover:text-gray-600">Show all</button>
+              <p className="text-sm font-medium text-fg-muted">{listLabel}</p>
+              <button onClick={() => setSelectedDate(null)} className="text-xs text-fg-dim hover:text-fg-muted transition-colors">Show all</button>
             </div>
           )}
-
           {listEvents.length === 0 ? (
-            <div className="text-center py-10 text-gray-400">
+            <div className="text-center py-10 text-fg-dim">
               <Calendar size={36} className="mx-auto mb-2 opacity-30" />
               <p className="text-sm">{selectedDate ? 'No events on this day' : 'No upcoming events'}</p>
             </div>

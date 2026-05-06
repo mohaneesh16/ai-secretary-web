@@ -27,9 +27,7 @@ function ReminderModal({ reminder, onClose, onSave }) {
       onSave()
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to save reminder')
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   return (
@@ -37,7 +35,7 @@ function ReminderModal({ reminder, onClose, onSave }) {
       <div className="card w-full max-w-md p-6">
         <h2 className="text-lg font-semibold mb-4">{isEdit ? 'Edit Reminder' : 'New Reminder'}</h2>
         <form onSubmit={submit} className="space-y-3">
-          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>}
+          {error && <p className="text-sm text-danger bg-danger-subtle px-3 py-2 rounded-lg">{error}</p>}
           <div>
             <label className="label">Reminder *</label>
             <input className="input" placeholder="e.g. Depart for acupuncturist" value={form.title} onChange={set('title')} required />
@@ -71,27 +69,32 @@ function ReminderModal({ reminder, onClose, onSave }) {
 }
 
 function ReminderCard({ reminder, onToggle, onEdit, onDelete }) {
-  const time     = reminder.notes?.match(/\[TIME:([\d:]+)\]/)?.[1]
-  const deadline = reminder.deadline
-  const today    = new Date().toISOString().slice(0, 10)
-  const isToday  = deadline === today
+  const time      = reminder.notes?.match(/\[TIME:([\d:]+)\]/)?.[1]
+  const deadline  = reminder.deadline
+  const today     = new Date().toISOString().slice(0, 10)
+  const isToday   = deadline === today
   const isOverdue = deadline && deadline < today && reminder.status !== 'completed'
 
-  const dateLabel = isToday ? 'Today' : isOverdue ? 'Overdue' : deadline
-    ? new Date(deadline + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
-    : ''
+  const dateLabel = isToday ? 'Today' : isOverdue ? 'Overdue'
+    : deadline ? new Date(deadline + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : ''
 
   return (
     <div className={`card p-4 flex items-center gap-3 ${reminder.status === 'completed' ? 'opacity-50' : ''}`}>
-      <button onClick={() => onToggle(reminder)} className={`shrink-0 ${reminder.status === 'completed' ? 'text-gray-900 dark:text-white' : 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-gray-300'}`}>
+      <button onClick={() => onToggle(reminder)} className={`shrink-0 transition-colors ${
+        reminder.status === 'completed' ? 'text-fg' : 'text-fg-dim hover:text-fg'
+      }`}>
         {reminder.status === 'completed' ? <CheckCircle2 size={22} /> : <Circle size={22} />}
       </button>
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium ${reminder.status === 'completed' ? 'line-through text-gray-400' : ''}`}>{reminder.title}</p>
+        <p className={`text-sm font-medium ${reminder.status === 'completed' ? 'line-through text-fg-dim' : 'text-fg'}`}>{reminder.title}</p>
         {(deadline || time) && (
           <div className="flex items-center gap-1.5 mt-1">
-            <Clock size={12} className={isOverdue ? 'text-red-400' : 'text-gray-400'} />
-            <span className={`text-xs ${isOverdue ? 'text-red-500 font-medium' : isToday ? 'text-gray-900 dark:text-white font-semibold' : 'text-gray-400'}`}>
+            <Clock size={12} className={isOverdue ? 'text-danger' : 'text-fg-dim'} />
+            <span className={`text-xs ${
+              isOverdue ? 'text-danger font-medium'
+              : isToday  ? 'text-fg font-semibold'
+              : 'text-fg-dim'
+            }`}>
               {dateLabel}{time ? ` · ${time}` : ''}
             </span>
           </div>
@@ -99,11 +102,11 @@ function ReminderCard({ reminder, onToggle, onEdit, onDelete }) {
       </div>
       <div className="flex gap-1 shrink-0">
         {reminder.status !== 'completed' && (
-          <button onClick={() => onEdit(reminder)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400">
+          <button onClick={() => onEdit(reminder)} className="p-1.5 rounded-lg hover:bg-surface-raised text-fg-dim transition-colors">
             <Pencil size={15} />
           </button>
         )}
-        <button onClick={() => onDelete(reminder.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-400 hover:text-red-500">
+        <button onClick={() => onDelete(reminder.id)} className="p-1.5 rounded-lg hover:bg-danger-subtle text-fg-dim hover:text-danger transition-colors">
           <Trash2 size={15} />
         </button>
       </div>
@@ -121,9 +124,7 @@ export default function Reminders() {
     try {
       const { data } = await client.get('/tasks')
       setReminders(data.tasks || [])
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   useEffect(() => { load() }, [])
@@ -162,10 +163,10 @@ export default function Reminders() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Reminders</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {todayCount > 0 && <span className="text-gray-900 dark:text-white font-semibold">{todayCount} today</span>}
+          <p className="text-sm text-fg-muted">
+            {todayCount > 0 && <span className="text-fg font-semibold">{todayCount} today</span>}
             {todayCount > 0 && overdueCount > 0 && ' · '}
-            {overdueCount > 0 && <span className="text-red-500 font-medium">{overdueCount} overdue</span>}
+            {overdueCount > 0 && <span className="text-danger font-medium">{overdueCount} overdue</span>}
             {todayCount === 0 && overdueCount === 0 && 'All clear'}
           </p>
         </div>
@@ -182,16 +183,20 @@ export default function Reminders() {
           { key: 'done',     label: 'Done' },
         ].map(({ key, label }) => (
           <button key={key} onClick={() => setFilter(key)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-150 ${filter === key ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200/60 dark:border-gray-700/40 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-150 ${
+              filter === key
+                ? 'bg-brand-strong text-brand-fg shadow-sm'
+                : 'bg-surface text-fg-muted border border-line hover:bg-surface-raised'
+            }`}>
             {label}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="space-y-3">{[1,2,3].map((i) => <div key={i} className="h-16 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />)}</div>
+        <div className="space-y-3">{[1,2,3].map((i) => <div key={i} className="h-16 bg-surface-raised rounded-xl animate-pulse" />)}</div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-fg-dim">
           <BellOff size={40} className="mx-auto mb-3 opacity-30" />
           <p>No reminders here</p>
           <p className="text-sm mt-1">You can also set reminders via Chat</p>
