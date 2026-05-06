@@ -88,10 +88,10 @@ export default function LoginPage() {
           Don't have an account?{' '}
           <Link to="/register" className="text-fg font-semibold hover:underline">Create one</Link>
         </p>
-        <p className="text-xs text-center text-fg-dim mt-4">
-          <Link to="/privacy" className="hover:text-fg-muted transition-colors">Privacy Policy</Link>
+        <p className="text-xs text-center text-fg-muted mt-4">
+          <Link to="/privacy" className="hover:text-fg transition-colors">Privacy Policy</Link>
           {' · '}
-          <Link to="/terms" className="hover:text-fg-muted transition-colors">Terms of Service</Link>
+          <Link to="/terms" className="hover:text-fg transition-colors">Terms of Service</Link>
         </p>
       </div>
     </div>
